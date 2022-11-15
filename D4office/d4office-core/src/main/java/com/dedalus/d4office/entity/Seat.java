@@ -44,6 +44,6 @@ public class Seat {
 		private int seatNo;		
 		
 		@Column(nullable = false)
-		private String office;		
+		private String officeId;		
 	}
 }
