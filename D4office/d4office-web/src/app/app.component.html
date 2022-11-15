@@ -1,5 +1,31 @@
-<nav>nav bar</nav>
+<nav class="navbar navbar-light" style="background-color: #25508D;">
+  <div>
+    <a class="navbar-brand" href="#">
+      <img alt="" width="300" height="30" class="d-inline-block align-top" src="../assets/images/dedalus-logo-white.svg">      
+    </a>
+  </div>
+</nav>
+
 <div class="container">
   <h3>{{title}}</h3>
   <router-outlet></router-outlet>
 </div>
+
+<footer>
+	<div class="container-fluid" style="background-color: #25508D;">
+		<div class="row">
+			<div class="col-sm-4 col-md-3 col-lg-2">
+				<a href="https://www.dedalus.com/global">
+					<img alt="Dedalus" class="img-fluid" src="../assets/images/dedalus-logo-white.svg">						
+				</a>
+			</div>			
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col text-center">
+				<small>© 2021 Dedalus S.p.A. - Piazza Santissima Trinità 6 - 20154 - Milano (MI)<br></small>
+				</div>
+			</div>
+	</div>
+</footer>
