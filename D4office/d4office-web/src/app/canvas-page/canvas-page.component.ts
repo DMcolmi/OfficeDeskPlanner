@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Seat } from '../seat';
+import { Desks } from '../desks';
+import { DesksServiceService } from '../desks-service.service';
 
 @Component({
   selector: 'app-canvas-page',
@@ -15,12 +16,17 @@ export class CanvasPageComponent implements OnInit {
   ctx: CanvasRenderingContext2D | null;
   private winH: number;
   private winW: number;
-  seatListPosition: any[];
-  seatList = new Array<Seat>();
+  deskListPosition: any[];
+  deskList = new Array<Desks>();
 
-  constructor() { }
+  constructor(private desksService: DesksServiceService) { }
 
   ngOnInit(): void {
+
+    this.desksService.getDesksConf('MI').subscribe(
+      desksConf => console.log(desksConf)      
+    );
+
     this.image.src = "../../assets/images/piantaMilano.svg";
 
     this.winH = 1000;
@@ -28,7 +34,7 @@ export class CanvasPageComponent implements OnInit {
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
 
-    this.seatListPosition = [[4.57, 7.67,1],
+    this.deskListPosition = [[4.57, 7.67,1],
     [6.12, 8.73,2],
     [4.57, 8.12,3],
     [12.34, 7.66,4],
@@ -42,11 +48,11 @@ export class CanvasPageComponent implements OnInit {
       this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
     }
 
-    this.seatListPosition.forEach(element => {
-      let seat = new Seat( this.winW* element[0]/ 20, this.winW * element[1]/ 20,this.winW*.004,'#ff3908', element[2]);
+    this.deskListPosition.forEach(element => {
+      let desk = new Desks( this.winW* element[0]/ 20, this.winW * element[1]/ 20,this.winW*.004,'#ff3908', element[2]);
       if(this.ctx){
-        seat.draw(this.ctx);
-        this.seatList.push(seat);
+        desk.draw(this.ctx);
+        this.deskList.push(desk);
       }
     });
 
@@ -62,7 +68,7 @@ export class CanvasPageComponent implements OnInit {
       const x = event.clientX - canvasRelavitveBound.left;
       const y = event.clientY - canvasRelavitveBound.top;
 
-      this.seatList.forEach(seat => {
+      this.deskList.forEach(seat => {
         seat.click(x,y);
       });
     })

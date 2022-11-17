@@ -3,23 +3,25 @@ package com.dedalus.d4office.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dedalus.d4office.business.SeatBusiness;
-import com.dedalus.d4office.dto.SeatDto;
+import com.dedalus.d4office.business.DeskBusiness;
+import com.dedalus.d4office.dto.DeskDto;
 
+@CrossOrigin
 @RestController
-@RequestMapping(value = "/seats")
-public class SeatController {
+@RequestMapping(value = "/api/desks")
+public class DeskController {
 	
 	@Autowired
-	SeatBusiness seatBusiness;
+	DeskBusiness deskBusiness;
 	
 	@GetMapping(value = "/{office}")
-	public List<SeatDto> getSeatsConf(@PathVariable String office){
-		return seatBusiness.getSeatsConf(office);
+	public List<DeskDto> getDesksConf(@PathVariable String office){
+		return deskBusiness.getDesksConf(office);
 	}
 }

@@ -1,4 +1,4 @@
-export class Seat {
+export class Desks {
 
     xPos: number;
     yPos: number;

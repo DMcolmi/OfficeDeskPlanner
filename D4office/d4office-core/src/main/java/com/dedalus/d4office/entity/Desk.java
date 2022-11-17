@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.dedalus.d4office.entity.embeddedId.SeatId;
+import com.dedalus.d4office.entity.embeddedId.DeskId;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +16,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "seats")
-public class Seat {	
+@Table(name = "desks")
+public class Desk {	
 
 	@EmbeddedId
-	private SeatId seatId;
+	private DeskId deskId;
 	
 	@Column
 	private Double xPos;

@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SeatDto {
+public class DeskDto {
 	
-	private int seatNo;
+	private int deskNo;
 	private Double xPos;
 	private Double yPos;
 	private boolean canBeReserved;
