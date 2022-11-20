@@ -1,20 +1,21 @@
-export class Desks {
+export class CanvasDesk {
 
-    xPos: number;
-    yPos: number;
+    xpos: number;
+    ypos: number;
     radius: number;
     color: string;
     ctx: CanvasRenderingContext2D;
-    seatNo: string;
+    deskNo: number;
 	canBeReserved: boolean;
-	isAvailableForSelectedDays: boolean;
+	availableForSelectedDays: boolean;
 
-    constructor(xPos: number, yPos: number, radius: number, color: string, seatNo: number){
-        this.xPos = xPos;
-        this.yPos = yPos;
+    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean){
+        this.xpos = xpos;
+        this.ypos = ypos;
         this.radius = radius;
-        this.color = color;
-        this.seatNo = seatNo.toString();
+        this.color = (canBeReserved ? '#08822f' : '#525252');
+        this.deskNo = deskNo;
+        this.canBeReserved = canBeReserved;
     }
 
     draw(ctx: CanvasRenderingContext2D){
@@ -22,7 +23,7 @@ export class Desks {
         ctx.beginPath();
         ctx.imageSmoothingEnabled= false;
         ctx.lineCap = 'round';
-        ctx.arc(this.xPos, this.yPos, this.radius, 0, Math.PI*2, false);
+        ctx.arc(this.xpos, this.ypos, this.radius, 0, Math.PI*2, false);
         ctx.strokeStyle = 'grey';
         ctx.lineWidth = .5;
         ctx.fillStyle = this.color;
@@ -31,23 +32,23 @@ export class Desks {
         ctx.closePath();
 
         ctx.fillStyle = '#000000';
-        ctx.fillText(this.seatNo, this.xPos - (this.radius/2), this.yPos - this.radius);
+       // ctx.fillText(this.seatNo.toString(), this.xPos - (this.radius/2), this.yPos - this.radius);
 
     }
 
     click(x: number, y: number){
         const distance: number = 
             Math.sqrt(
-                Math.pow(x-this.xPos, 2) + 
-                Math.pow(y-this.yPos, 2)
+                Math.pow(x-this.xpos, 2) + 
+                Math.pow(y-this.ypos, 2)
             )
         console.log(distance);
-        if(distance<this.radius){
+        if(distance<this.radius && this.canBeReserved){
             console.log('bingo');
             this.changeColor('#0873ff');
 
         } else {            
-            this.changeColor('#08ffb1');
+            this.changeColor((this.canBeReserved ? '#08822f' : '#525252'));
             this.draw(this.ctx);
         }            
     }

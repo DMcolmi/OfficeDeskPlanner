@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Desks } from '../desks';
+import { CanvasDesk } from '../canvasDesk';
 import { DesksServiceService } from '../desks-service.service';
 
 @Component({
@@ -16,16 +16,14 @@ export class CanvasPageComponent implements OnInit {
   ctx: CanvasRenderingContext2D | null;
   private winH: number;
   private winW: number;
-  deskListPosition: any[];
-  deskList = new Array<Desks>();
+  deskListPosition: CanvasDesk[];
+  deskList = new Array<CanvasDesk>();
 
   constructor(private desksService: DesksServiceService) { }
 
   ngOnInit(): void {
 
-    this.desksService.getDesksConf('MI').subscribe(
-      desksConf => console.log(desksConf)      
-    );
+
 
     this.image.src = "../../assets/images/piantaMilano.svg";
 
@@ -33,28 +31,31 @@ export class CanvasPageComponent implements OnInit {
     this.winW = 2000;
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
-
-    this.deskListPosition = [[4.57, 7.67,1],
-    [6.12, 8.73,2],
-    [4.57, 8.12,3],
-    [12.34, 7.66,4],
-    [4.57, 8.56,5],
-    [5, 8.73,6],
-    [5, 8.28,79],];
-
+    
     this.ctx = this.canvas.nativeElement.getContext("2d");
 
-    this.image.onload = () => {
-      this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
-    }
+    this.desksService.getDesksConf('MI').subscribe(
+      desksConf => {
+        this.deskListPosition = desksConf;
+        console.log(this.deskListPosition);
 
-    this.deskListPosition.forEach(element => {
-      let desk = new Desks( this.winW* element[0]/ 20, this.winW * element[1]/ 20,this.winW*.004,'#ff3908', element[2]);
-      if(this.ctx){
-        desk.draw(this.ctx);
-        this.deskList.push(desk);
+        // this.deskListPosition = [
+        //   new CanvasDesk(4.57, 7.67,0,'',1)
+        // ]
+
+        this.image.onload = () => {
+          this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
+        }
+        
+        this.deskListPosition.forEach(deskConf => {
+          let desk = new CanvasDesk( this.winW* deskConf.xpos/ 20, this.winW * deskConf.ypos/ 20,this.winW*.004, deskConf.deskNo, deskConf.canBeReserved);
+          if(this.ctx){
+            desk.draw(this.ctx);
+            this.deskList.push(desk);
+          }
+        });
       }
-    });
+    );
 
     
 
@@ -71,6 +72,7 @@ export class CanvasPageComponent implements OnInit {
       this.deskList.forEach(seat => {
         seat.click(x,y);
       });
+      this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
     })
   }
 }

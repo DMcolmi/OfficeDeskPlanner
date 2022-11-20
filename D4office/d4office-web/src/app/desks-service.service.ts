@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Desks } from './desks';
+import { CanvasDesk } from './canvasDesk';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class DesksServiceService {
     private http: HttpClient
   ) { }
 
-  getDesksConf(office: String): Observable<Desks[]>{
-    return this.http.get<Desks[]>(`${this.desksUrl}/${office}`);
+  getDesksConf(office: String): Observable<CanvasDesk[]>{
+    return this.http.get<CanvasDesk[]>(`${this.desksUrl}/${office}`);
   }
 
 }
