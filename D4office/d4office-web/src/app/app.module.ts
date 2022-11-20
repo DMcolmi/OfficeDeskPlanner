@@ -5,11 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CanvasPageComponent } from './canvas-page/canvas-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PickOfficeComponent } from './pick-office/pick-office.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CanvasPageComponent
+    CanvasPageComponent,
+    PickOfficeComponent
   ],
   imports: [
     BrowserModule,

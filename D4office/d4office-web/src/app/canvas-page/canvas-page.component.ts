@@ -23,8 +23,6 @@ export class CanvasPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-
-
     this.image.src = "../../assets/images/piantaMilano.svg";
 
     this.winH = 1000;
@@ -33,19 +31,12 @@ export class CanvasPageComponent implements OnInit {
     this.canvas.nativeElement.width = this.winW;
     
     this.ctx = this.canvas.nativeElement.getContext("2d");
+    this.ctx.globalAlpha = 0.7;
 
     this.desksService.getDesksConf('MI').subscribe(
       desksConf => {
         this.deskListPosition = desksConf;
-        console.log(this.deskListPosition);
-
-        // this.deskListPosition = [
-        //   new CanvasDesk(4.57, 7.67,0,'',1)
-        // ]
-
-        this.image.onload = () => {
-          this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
-        }
+        console.log(this.deskListPosition);      
         
         this.deskListPosition.forEach(deskConf => {
           let desk = new CanvasDesk( this.winW* deskConf.xpos/ 20, this.winW * deskConf.ypos/ 20,this.winW*.004, deskConf.deskNo, deskConf.canBeReserved);
@@ -53,18 +44,19 @@ export class CanvasPageComponent implements OnInit {
             desk.draw(this.ctx);
             this.deskList.push(desk);
           }
-        });
-      }
+        });        
+      },
+      this.image.onload = () => {
+        this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
+      }      
     );
-
-    
-
 
     window.addEventListener("resize", () => {
       //window.location.reload();
     })
 
     this.canvas.nativeElement.addEventListener('click', (event) => {
+      this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       const canvasRelavitveBound = this.canvas.nativeElement.getBoundingClientRect();
       const x = event.clientX - canvasRelavitveBound.left;
       const y = event.clientY - canvasRelavitveBound.top;
