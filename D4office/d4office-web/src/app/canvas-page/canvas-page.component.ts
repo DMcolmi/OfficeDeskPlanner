@@ -9,13 +9,14 @@ import { DesksServiceService } from '../desks-service.service';
 })
 export class CanvasPageComponent implements OnInit {
 
-  @ViewChild('canvas', {static: true})
+  @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>
 
   image = new Image();
   ctx: CanvasRenderingContext2D | null;
   private winH: number;
   private winW: number;
+  private imgW: number;
   deskListPosition: CanvasDesk[];
   deskList = new Array<CanvasDesk>();
 
@@ -24,32 +25,33 @@ export class CanvasPageComponent implements OnInit {
   ngOnInit(): void {
 
     this.image.src = "../../assets/images/piantaMilano.svg";
-
-    this.winH = 1000;
-    this.winW = 2000;
+    this.imgW = 1200;
+    this.winH = 500;
+    this.winW = 1000;
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
-    
+
     this.ctx = this.canvas.nativeElement.getContext("2d");
     this.ctx.globalAlpha = 0.7;
 
-    this.desksService.getDesksConf('MI').subscribe(
-      desksConf => {
+    this.desksService.getDesksConf('MI').subscribe({
+      next: (desksConf) => {
         this.deskListPosition = desksConf;
-        console.log(this.deskListPosition);      
-        
+        console.log(this.deskListPosition);
         this.deskListPosition.forEach(deskConf => {
-          let desk = new CanvasDesk( this.winW* deskConf.xpos/ 20, this.winW * deskConf.ypos/ 20,this.winW*.004, deskConf.deskNo, deskConf.canBeReserved);
-          if(this.ctx){
+          let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved);
+          if (this.ctx) {
             desk.draw(this.ctx);
             this.deskList.push(desk);
           }
-        });        
+        });
       },
-      this.image.onload = () => {
-        this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
-      }      
-    );
+      error: (e) => console.log('error: ', e),
+      complete: () => {
+        console.log('finish');        
+        this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);        
+      }
+    });
 
     window.addEventListener("resize", () => {
       //window.location.reload();
@@ -62,9 +64,9 @@ export class CanvasPageComponent implements OnInit {
       const y = event.clientY - canvasRelavitveBound.top;
 
       this.deskList.forEach(seat => {
-        seat.click(x,y);
+        seat.click(x, y);
       });
-      this.ctx?.drawImage(this.image, 0, 0, this.winW, this.winW * 0.5 );
+      this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
     })
   }
 }
