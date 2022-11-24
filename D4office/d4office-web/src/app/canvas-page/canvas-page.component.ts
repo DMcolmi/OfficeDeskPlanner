@@ -32,7 +32,8 @@ export class CanvasPageComponent implements OnInit {
     this.canvas.nativeElement.width = this.winW;
 
     this.ctx = this.canvas.nativeElement.getContext("2d");
-    this.ctx.globalAlpha = 0.7;
+    if(this.ctx)
+      this.ctx.globalAlpha = 0.7;
 
     this.desksService.getDesksConf('MI').subscribe({
       next: (desksConf) => {
@@ -58,7 +59,7 @@ export class CanvasPageComponent implements OnInit {
     })
 
     this.canvas.nativeElement.addEventListener('click', (event) => {
-      this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       const canvasRelavitveBound = this.canvas.nativeElement.getBoundingClientRect();
       const x = event.clientX - canvasRelavitveBound.left;
       const y = event.clientY - canvasRelavitveBound.top;

@@ -57,5 +57,4 @@ export class CanvasDesk {
         this.color = newColor;
         this.draw(this.ctx);
     }
-
 }

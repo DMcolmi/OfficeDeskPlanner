@@ -3,9 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasPageComponent } from './canvas-page/canvas-page.component';
-import { HttpClientModule } from '@angular/common/http';
 import { PickOfficeComponent } from './pick-office/pick-office.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { PickOfficeComponent } from './pick-office/pick-office.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     HttpClientModule,
   ],
   providers: [],

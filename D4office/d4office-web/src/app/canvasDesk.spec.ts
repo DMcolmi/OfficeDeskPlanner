@@ -1,6 +1,6 @@
-import { CanvasDesk } from './canvasDesk';
+import { CanvasDesk } from './canvas-desk';
 
-describe('Seat', () => {
+describe('CanvasDesk', () => {
   it('should create an instance', () => {
     expect(new CanvasDesk()).toBeTruthy();
   });
