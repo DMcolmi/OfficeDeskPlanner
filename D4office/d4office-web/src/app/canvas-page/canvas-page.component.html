@@ -1,3 +1,23 @@
+<div class="container">
+    <form>
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Choose a date to book a desk</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-form-field class="full-width">
+                    <ngx-multiple-dates [matDatepicker]="pickerWithToggleButton" 
+                                        name="modelWithToggleButton" [(ngModel)]="modelDatePicker">
+                    </ngx-multiple-dates>
+                    <mat-datepicker-toggle matPrefix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerWithToggleButton></mat-datepicker>
+                  </mat-form-field>
+                <pre>{{ modelDatePicker | json }}</pre>
+              </mat-card-content>           
+        </mat-card>
+    </form>
+</div>
+
 <div class="mx-auto">
     <canvas #canvas></canvas>
 </div>

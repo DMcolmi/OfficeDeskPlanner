@@ -7,6 +7,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasPageComponent } from './canvas-page/canvas-page.component';
 import { PickOfficeComponent } from './pick-office/pick-office.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { NgxMultipleDatesModule } from 'ngx-multiple-dates';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+
+
+
 
 @NgModule({
   declarations: [
@@ -19,6 +29,13 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatIconModule,
+    NgxMultipleDatesModule, 
+    MatCardModule,
+    MatFormFieldModule,
+    FormsModule    
   ],
   providers: [],
   bootstrap: [AppComponent]
