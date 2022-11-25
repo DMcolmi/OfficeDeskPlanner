@@ -1,23 +1,30 @@
 <div class="container">
-    <form>
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>Choose a date to book a desk</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <mat-form-field class="full-width">
-                    <ngx-multiple-dates [matDatepicker]="pickerWithToggleButton" 
-                                        name="modelWithToggleButton" [(ngModel)]="modelDatePicker">
-                    </ngx-multiple-dates>
-                    <mat-datepicker-toggle matPrefix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerWithToggleButton></mat-datepicker>
-                  </mat-form-field>
-                <pre>{{ modelDatePicker | json }}</pre>
-              </mat-card-content>           
-        </mat-card>
-    </form>
+  <form class="container" style="margin: 2%;">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Choose a date to book a desk</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field class="full-width">
+          <ngx-multiple-dates [matDatepicker]="pickerWithToggleButton" name="modelWithToggleButton" placeholder="Choose a date"
+            [(ngModel)]="modelDatePicker">
+          </ngx-multiple-dates>
+          <mat-datepicker-toggle matSuffix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
+          <mat-datepicker #pickerWithToggleButton></mat-datepicker>
+        </mat-form-field>
+        <pre>{{ modelDatePicker | json }}</pre>
+      </mat-card-content>
+      <mat-card-content>
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+  </form>
 </div>
 
 <div class="mx-auto">
-    <canvas #canvas></canvas>
+  <canvas #canvas></canvas>
 </div>

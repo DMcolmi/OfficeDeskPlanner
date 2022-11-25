@@ -14,15 +14,16 @@ import { NgxMultipleDatesModule } from 'ngx-multiple-dates';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent, 
     CanvasPageComponent,
-    PickOfficeComponent
+    PickOfficeComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +36,8 @@ import { FormsModule } from '@angular/forms';
     NgxMultipleDatesModule, 
     MatCardModule,
     MatFormFieldModule,
-    FormsModule    
+    FormsModule,
+    MatInputModule  
   ],
   providers: [],
   bootstrap: [AppComponent]

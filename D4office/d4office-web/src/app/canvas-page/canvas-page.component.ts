@@ -20,7 +20,7 @@ export class CanvasPageComponent implements OnInit {
   deskListPosition: CanvasDesk[];
   deskList = new Array<CanvasDesk>();
   modelDatePicker: any;
-model: any;
+  model: any;
 
   constructor(private desksService: DesksServiceService) { }
 
@@ -73,3 +73,4 @@ model: any;
     })
   }
 }
+
