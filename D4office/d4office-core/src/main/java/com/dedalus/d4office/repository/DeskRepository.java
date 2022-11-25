@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.dedalus.d4office.entity.Desk;
-import com.dedalus.d4office.entity.embeddedId.DeskId;
+import com.dedalus.d4office.entity.embeddedid.DeskId;
 
 public interface DeskRepository extends JpaRepository<Desk, DeskId> {
 	
