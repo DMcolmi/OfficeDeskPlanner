@@ -15,6 +15,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { CanvasPanTestComponent } from './canvas-pan-test/canvas-pan-test.component';
 
 
 
@@ -24,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
     AppComponent, 
     CanvasPageComponent,
     PickOfficeComponent,
+    CanvasPanTestComponent,
   ],
   imports: [
     BrowserModule,
