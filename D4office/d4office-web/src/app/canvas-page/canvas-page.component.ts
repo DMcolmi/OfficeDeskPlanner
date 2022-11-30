@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatCard } from '@angular/material/card';
 import { CanvasDesk } from '../canvasDesk';
 import { DesksServiceService } from '../desks-service.service';
 
@@ -11,6 +12,9 @@ export class CanvasPageComponent implements OnInit {
 
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>
+
+  @ViewChild('canvasCard', { static: true })
+  canvasCard: ElementRef
 
   image = new Image();
   ctx: CanvasRenderingContext2D | null;
@@ -26,10 +30,10 @@ export class CanvasPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.image.src = "../../assets/images/piantaMilano.svg";
+    this.image.src = "../../assets/images/piantaMilano.svg"; 
     this.imgW = 2000;
     this.winH = 1000;
-    this.winW = 2000;
+    this.winW = this.canvasCard.nativeElement.getBoundingClientRect();
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
 
