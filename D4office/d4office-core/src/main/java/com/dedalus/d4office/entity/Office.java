@@ -4,6 +4,7 @@ package com.dedalus.d4office.entity;
 import java.sql.Blob;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -11,6 +12,7 @@ import lombok.Data;
 
 @Data
 @Table(name = "offices")
+@Entity
 public class Office {	
 	
 	@Id

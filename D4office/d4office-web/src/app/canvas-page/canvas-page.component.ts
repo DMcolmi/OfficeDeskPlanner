@@ -28,7 +28,7 @@ export class CanvasPageComponent implements OnInit {
 
     this.image.src = "../../assets/images/piantaMilano.svg";
     this.imgW = 2000;
-    this.winH = 2000;
+    this.winH = 1000;
     this.winW = 2000;
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
