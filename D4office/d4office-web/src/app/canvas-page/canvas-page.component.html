@@ -5,14 +5,13 @@
         <mat-card-title>Choose a date to book a desk</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <mat-form-field class="full-width">
+        <mat-form-field class="w-100 p-3">
           <ngx-multiple-dates [matDatepicker]="pickerWithToggleButton" name="modelWithToggleButton"
             placeholder="Choose a date" [(ngModel)]="modelDatePicker">
           </ngx-multiple-dates>
           <mat-datepicker-toggle matSuffix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
           <mat-datepicker #pickerWithToggleButton></mat-datepicker>
         </mat-form-field>
-        <pre>{{ modelDatePicker | json }}</pre>
       </mat-card-content>
       <mat-card-content>
         <mat-form-field>
@@ -24,13 +23,15 @@
     </mat-card>
   </form>
   <form style="margin: 2%;">
-  <mat-card #canvasCard>
-    <mat-card-header>
-      <mat-card-title>Office Plan</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <canvas #canvas></canvas>
-    </mat-card-content>
-  </mat-card>
-</form>
+    <div #canvasCard>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Office Plan</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <canvas #canvas></canvas>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </form>
 </div>

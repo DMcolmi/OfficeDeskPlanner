@@ -33,7 +33,8 @@ export class CanvasPageComponent implements OnInit {
     this.image.src = "../../assets/images/piantaMilano.svg"; 
     this.imgW = 2000;
     this.winH = 1000;
-    this.winW = this.canvasCard.nativeElement.getBoundingClientRect();
+    var cardBound = this.canvasCard.nativeElement.getBoundingClientRect();    
+    this.winW = (cardBound.right - cardBound.left) * .96;
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
 
@@ -61,7 +62,7 @@ export class CanvasPageComponent implements OnInit {
     });
 
     window.addEventListener("resize", () => {
-      //window.location.reload();
+      window.location.reload();
     })
 
     this.canvas.nativeElement.addEventListener('click', (event) => {
