@@ -16,7 +16,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { CanvasPanTestComponent } from './canvas-pan-test/canvas-pan-test.component';
-
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 
@@ -39,7 +41,10 @@ import { CanvasPanTestComponent } from './canvas-pan-test/canvas-pan-test.compon
     MatCardModule,
     MatFormFieldModule,
     FormsModule,
-    MatInputModule  
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -25,6 +25,7 @@ export class CanvasPageComponent implements OnInit {
   deskList = new Array<CanvasDesk>();
   modelDatePicker: any;
   model: any;
+  selectedDesk: CanvasDesk;
 
   constructor(private desksService: DesksServiceService) { }
 
