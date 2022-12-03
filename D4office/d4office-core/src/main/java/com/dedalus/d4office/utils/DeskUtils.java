@@ -12,7 +12,7 @@ public class DeskUtils {
 	}
 	
 	public static List<DeskDto> fromDeskListToDeskDtoList(List<Desk> seatList) {
-		return seatList.stream().map(t -> new DeskDto(t.getDeskId().getDeskNo(), t.getXPos(), t.getYPos(), t.isCanBeReserved(), t.isAvailableForSelectedDays())).collect(Collectors.toList());
+		return seatList.stream().map(t -> new DeskDto(t.getDeskId().getDeskNo(), t.getDeskId().getOfficeId(), t.getXPos(), t.getYPos(), t.isCanBeReserved(), t.isAvailableForSelectedDays())).collect(Collectors.toList());
  	}
 
 }

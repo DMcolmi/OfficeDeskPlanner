@@ -8,6 +8,7 @@ import lombok.Data;
 public class DeskDto {
 	
 	private int deskNo;
+	private String officeId;
 	private Double xPos;
 	private Double yPos;
 	private boolean canBeReserved;

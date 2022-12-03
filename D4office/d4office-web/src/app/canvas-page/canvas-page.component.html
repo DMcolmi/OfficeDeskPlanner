@@ -13,7 +13,7 @@
           <mat-datepicker #pickerWithToggleButton></mat-datepicker>
         </mat-form-field>
         <div align="end">
-          <button mat-raised-button>Check desk availability</button>
+          <button mat-raised-button [disabled]="modelDatePicker == null || modelDatePicker.length == 0">Check desk availability</button>
         </div>
       </mat-card-content>
       <!-- <mat-card-content>
@@ -37,7 +37,7 @@
             </mat-select>
           </mat-form-field>
           <div align="end">
-            <button mat-raised-button >Book selected desk</button>
+            <button mat-raised-button [disabled]="selectedDesk == null">Book selected desk</button>
           </div>
         </mat-card-content>
     </mat-card>
