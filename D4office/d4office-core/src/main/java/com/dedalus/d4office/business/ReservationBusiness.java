@@ -2,6 +2,7 @@ package com.dedalus.d4office.business;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dedalus.d4office.dto.ReservationDto;
 import com.dedalus.d4office.entity.Reservation;
@@ -14,16 +15,17 @@ public class ReservationBusiness {
 	@Autowired
 	ReservationRepository reservationRepository;
 	
+	@Transactional
 	public void bookDesks(ReservationDto reservation) {		
-		reservation.getDeskToBeReserved().stream().forEach(desk -> {
+		reservation.getDeskToBeReserved().stream().forEach(desk -> 
 			reservation.getReservationDates().stream().forEach( bookingDate -> {
 				
 				ReservationId resId = new ReservationId(desk.getDeskNo(), desk.getOfficeId(), bookingDate);
 				Reservation res = new Reservation(resId, reservation.getMailId());
 				reservationRepository.save(res);
 				
-			});
-		});		
+			})
+		);		
 	}
 	
 }

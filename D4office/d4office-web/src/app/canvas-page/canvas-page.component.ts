@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatCard } from '@angular/material/card';
+import { MultipleDatesComponent } from 'ngx-multiple-dates';
 import { CanvasDesk } from '../canvasDesk';
 import { DesksServiceService } from '../desks-service.service';
 
@@ -21,9 +22,8 @@ export class CanvasPageComponent implements OnInit {
   private winH: number;
   private winW: number;
   private imgW: number;
-  deskListPosition: CanvasDesk[];
-  deskList = new Array<CanvasDesk>();
-  modelDatePicker: any;
+  deskListRelativePosition = new Array<CanvasDesk>();
+  modelDatePicker = new Array<Date>();
   model: any;
   selectedDesk: CanvasDesk;
 
@@ -45,13 +45,13 @@ export class CanvasPageComponent implements OnInit {
 
     this.desksService.getDesksConf('MI').subscribe({
       next: (desksConf) => {
-        this.deskListPosition = desksConf;
-        console.log(this.deskListPosition);
-        this.deskListPosition.forEach(deskConf => {
-          let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved);
+        var deskListAbsolutePosition = desksConf;
+
+        deskListAbsolutePosition.forEach(deskConf => {
+          let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.availableForSelectedDays);
           if (this.ctx) {
             desk.draw(this.ctx);
-            this.deskList.push(desk);
+            this.deskListRelativePosition.push(desk);
           }
         });
       },
@@ -66,17 +66,36 @@ export class CanvasPageComponent implements OnInit {
       window.location.reload();
     })
 
+
     this.canvas.nativeElement.addEventListener('click', (event) => {
       this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       const canvasRelavitveBound = this.canvas.nativeElement.getBoundingClientRect();
       const x = event.clientX - canvasRelavitveBound.left;
       const y = event.clientY - canvasRelavitveBound.top;
 
-      this.deskList.forEach(seat => {
-        seat.click(x, y);
+      this.deskListRelativePosition.forEach(desk => {
+        var isSelected : Boolean = desk.click(x, y);
+        if(isSelected){
+          this.selectedDesk = desk;
+        }
       });
-      this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
+      this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);    
+      console.log(this.selectedDesk);
+        
     })
+
+    
+  }
+
+  selectedDeskFromDropdown(){
+      console.log(this.selectedDesk);   
+      this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      this.deskListRelativePosition.forEach(desk => {
+        desk.click(0, 0);
+      });
+
+      this.selectedDesk.click(this.selectedDesk.xpos, this.selectedDesk.ypos);
+      this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);     
   }
 }
 

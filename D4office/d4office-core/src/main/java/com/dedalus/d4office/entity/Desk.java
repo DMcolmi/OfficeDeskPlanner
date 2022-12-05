@@ -7,9 +7,15 @@ import javax.persistence.Transient;
 
 import com.dedalus.d4office.entity.embeddedid.DeskId;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "desks")
 public class Desk {
@@ -19,5 +25,5 @@ public class Desk {
 	private Double yPos;	
 	private boolean canBeReserved;
 	@Transient
-	private boolean isAvailableForSelectedDays;
+	private Boolean isAvailableForSelectedDays;
 }

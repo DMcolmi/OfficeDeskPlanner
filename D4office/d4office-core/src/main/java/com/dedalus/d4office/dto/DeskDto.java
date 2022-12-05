@@ -12,5 +12,5 @@ public class DeskDto {
 	private Double xPos;
 	private Double yPos;
 	private boolean canBeReserved;
-	private boolean isAvailableForSelectedDays;
+	private Boolean isAvailableForSelectedDays;
 }

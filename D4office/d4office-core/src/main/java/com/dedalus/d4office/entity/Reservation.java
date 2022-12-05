@@ -6,9 +6,13 @@ import javax.persistence.Id;
 import com.dedalus.d4office.entity.embeddedid.ReservationId;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "reservations")
 public class Reservation {

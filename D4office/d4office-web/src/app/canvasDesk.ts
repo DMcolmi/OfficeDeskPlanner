@@ -7,15 +7,16 @@ export class CanvasDesk {
     ctx: CanvasRenderingContext2D;
     deskNo: number;
 	canBeReserved: boolean;
-	availableForSelectedDays: boolean;
+	availableForSelectedDays: Boolean;
 
-    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean){
+    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean, availableForSelectedDays: Boolean){
         this.xpos = xpos;
         this.ypos = ypos;
         this.radius = radius;
-        this.color = (canBeReserved ? '#08822f' : '#525252');
         this.deskNo = deskNo;
         this.canBeReserved = canBeReserved;
+        this.availableForSelectedDays = availableForSelectedDays;
+        this.color = this.getColor();
     }
 
     draw(ctx: CanvasRenderingContext2D){
@@ -36,25 +37,38 @@ export class CanvasDesk {
 
     }
 
-    click(x: number, y: number){
+    click(x: number, y: number): Boolean {
         const distance: number = 
             Math.sqrt(
                 Math.pow(x-this.xpos, 2) + 
                 Math.pow(y-this.ypos, 2)
             )
-        console.log(distance);
-        if(distance<this.radius && this.canBeReserved){
+        if(distance<this.radius && this.canBeReserved && this.availableForSelectedDays){
             console.log('bingo');
             this.changeColor('#0873ff');
 
-        } else {            
-            this.changeColor((this.canBeReserved ? '#08822f' : '#525252'));
+        } else {                       
+            this.changeColor(this.getColor());
             this.draw(this.ctx);
-        }            
+        }
+        return distance<this.radius && this.canBeReserved && this.availableForSelectedDays;            
     }
 
     changeColor(newColor: string){
         this.color = newColor;
         this.draw(this.ctx);
+    }
+
+    getColor(): string{
+        if(this.availableForSelectedDays != null){
+            if(this.canBeReserved && this.availableForSelectedDays)    
+            return '#70fa9c';
+            if(this.canBeReserved && !this.availableForSelectedDays)    
+            return '#7a5158';
+        }
+        if(this.canBeReserved){
+            return '#d9dbd9'
+        }
+        return '#ffffff';
     }
 }
