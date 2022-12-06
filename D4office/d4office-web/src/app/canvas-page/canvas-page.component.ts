@@ -23,6 +23,7 @@ export class CanvasPageComponent implements OnInit {
   private winW: number;
   private imgW: number;
   deskListRelativePosition = new Array<CanvasDesk>();
+  bookableDesks = new Array<CanvasDesk>();
   modelDatePicker = new Array<Date>();
   model: any;
   selectedDesk: CanvasDesk;
@@ -48,10 +49,12 @@ export class CanvasPageComponent implements OnInit {
         var deskListAbsolutePosition = desksConf;
 
         deskListAbsolutePosition.forEach(deskConf => {
-          let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.availableForSelectedDays);
+          let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved);
           if (this.ctx) {
             desk.draw(this.ctx);
             this.deskListRelativePosition.push(desk);
+            if(deskConf.canBeReserved && deskConf.isReserved)
+              this.bookableDesks.push(desk);
           }
         });
       },
@@ -87,7 +90,7 @@ export class CanvasPageComponent implements OnInit {
     
   }
 
-  selectedDeskFromDropdown(){
+  onSelectedDeskFromDropdown(){
       console.log(this.selectedDesk);   
       this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       this.deskListRelativePosition.forEach(desk => {
@@ -96,6 +99,11 @@ export class CanvasPageComponent implements OnInit {
 
       this.selectedDesk.click(this.selectedDesk.xpos, this.selectedDesk.ypos);
       this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);     
+  }
+
+  onDatePickerClick(){
+    console.log("date list updated");
+    
   }
 }
 

@@ -9,7 +9,9 @@ import { CanvasDesk } from './canvasDesk';
 })
 export class DesksServiceService {
 
-  private desksUrl = 'http://localhost:8080/api/desks';
+  private baseUrl = 'http://localhost:8080/api/';
+  private desksUrl = this.baseUrl + 'desks';
+  private getReservableDeskForDaysUrl =  this.baseUrl + 'getReservableDeskForDays';
 
   constructor(
     private http: HttpClient
@@ -17,6 +19,11 @@ export class DesksServiceService {
 
   getDesksConf(office: String): Observable<CanvasDesk[]>{
     return this.http.get<CanvasDesk[]>(`${this.desksUrl}/${office}`);
+  }
+
+  getReservableDeskForSelectedDays(modelDatePicker: Array<Date>): Observable<CanvasDesk[]>{
+    return this.http.get<CanvasDesk[]>(`${this.getReservableDeskForDaysUrl}`, {});
+
   }
 
 }

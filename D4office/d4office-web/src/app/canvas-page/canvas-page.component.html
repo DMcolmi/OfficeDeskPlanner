@@ -5,9 +5,9 @@
         <mat-card-title></mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <mat-form-field class="w-100">
+        <mat-form-field class="w-100" >
           <ngx-multiple-dates #datePicker [matDatepicker]="pickerWithToggleButton" name="modelWithToggleButton"
-            placeholder="Choose a date" [(ngModel)]="modelDatePicker">
+            placeholder="Choose a date" [(ngModel)]="modelDatePicker" (dateChange)="onDatePickerClick()" (remove)="onDatePickerClick()">
           </ngx-multiple-dates>
           <mat-datepicker-toggle matSuffix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
           <mat-datepicker #pickerWithToggleButton></mat-datepicker>
@@ -33,7 +33,7 @@
           <mat-form-field class="w-100">
             <mat-label>Select a desk</mat-label>
             <mat-select [(value)]="selectedDesk" style="text-align: center;">
-              <mat-option *ngFor="let desk of deskListRelativePosition" [value]=desk (click)="selectedDeskFromDropdown()"> {{desk.deskNo}} </mat-option>
+              <mat-option *ngFor="let desk of bookableDesks" [value]=desk (click)="onSelectedDeskFromDropdown()"> {{desk.deskNo}} </mat-option>
             </mat-select>
           </mat-form-field>
           <div align="end">

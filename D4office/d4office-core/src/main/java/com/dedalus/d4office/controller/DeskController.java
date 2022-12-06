@@ -1,5 +1,6 @@
 package com.dedalus.d4office.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,10 @@ public class DeskController {
 	@PostMapping(value = "/book")
 	public void bookDesks(@RequestBody ReservationDto reservation) {
 		reservationBusiness.bookDesks(reservation);
+	}
+	
+	@GetMapping(value = "/getReservableDeskForDays")
+	public List<DeskDto> getReservableDeskForSelectedDays(@RequestBody List<LocalDate> selectedDays){
+		return deskBusiness.getReservableDeskForSelectedDays(selectedDays);
 	}
 }

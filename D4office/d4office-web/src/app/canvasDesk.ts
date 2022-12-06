@@ -7,15 +7,15 @@ export class CanvasDesk {
     ctx: CanvasRenderingContext2D;
     deskNo: number;
 	canBeReserved: boolean;
-	availableForSelectedDays: Boolean;
+	isReserved: Boolean;
 
-    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean, availableForSelectedDays: Boolean){
+    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean, isReserved: Boolean){
         this.xpos = xpos;
         this.ypos = ypos;
         this.radius = radius;
         this.deskNo = deskNo;
         this.canBeReserved = canBeReserved;
-        this.availableForSelectedDays = availableForSelectedDays;
+        this.isReserved = isReserved;
         this.color = this.getColor();
     }
 
@@ -43,7 +43,7 @@ export class CanvasDesk {
                 Math.pow(x-this.xpos, 2) + 
                 Math.pow(y-this.ypos, 2)
             )
-        if(distance<this.radius && this.canBeReserved && this.availableForSelectedDays){
+        if(distance<this.radius && this.canBeReserved && this.isReserved){
             console.log('bingo');
             this.changeColor('#0873ff');
 
@@ -51,7 +51,7 @@ export class CanvasDesk {
             this.changeColor(this.getColor());
             this.draw(this.ctx);
         }
-        return distance<this.radius && this.canBeReserved && this.availableForSelectedDays;            
+        return distance<this.radius && this.canBeReserved && this.isReserved;            
     }
 
     changeColor(newColor: string){
@@ -60,10 +60,10 @@ export class CanvasDesk {
     }
 
     getColor(): string{
-        if(this.availableForSelectedDays != null){
-            if(this.canBeReserved && this.availableForSelectedDays)    
+        if(this.isReserved != null){
+            if(this.canBeReserved && this.isReserved)    
             return '#70fa9c';
-            if(this.canBeReserved && !this.availableForSelectedDays)    
+            if(this.canBeReserved && !this.isReserved)    
             return '#7a5158';
         }
         if(this.canBeReserved){
