@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CanvasDesk } from './canvasDesk';
@@ -9,9 +9,9 @@ import { CanvasDesk } from './canvasDesk';
 })
 export class DesksServiceService {
 
-  private baseUrl = 'http://localhost:8080/api/';
-  private desksUrl = this.baseUrl + 'desks';
-  private getReservableDeskForDaysUrl =  this.baseUrl + 'getReservableDeskForDays';
+  private baseUrl = 'http://localhost:8080/api/desks';
+  private desksUrl = this.baseUrl;
+  private getReservableDeskForDaysUrl =  this.baseUrl + '/getReservableDeskForDays';
 
   constructor(
     private http: HttpClient
@@ -22,8 +22,10 @@ export class DesksServiceService {
   }
 
   getReservableDeskForSelectedDays(modelDatePicker: Array<Date>): Observable<CanvasDesk[]>{
-    return this.http.get<CanvasDesk[]>(`${this.getReservableDeskForDaysUrl}`, {});
-
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    return this.http.post<CanvasDesk[]>(`${this.getReservableDeskForDaysUrl}`,  modelDatePicker);
   }
 
 }

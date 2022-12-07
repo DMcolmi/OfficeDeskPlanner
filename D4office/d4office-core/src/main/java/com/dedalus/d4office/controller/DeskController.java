@@ -37,7 +37,7 @@ public class DeskController {
 		reservationBusiness.bookDesks(reservation);
 	}
 	
-	@GetMapping(value = "/getReservableDeskForDays")
+	@PostMapping(value = "/getReservableDeskForDays")
 	public List<DeskDto> getReservableDeskForSelectedDays(@RequestBody List<LocalDate> selectedDays){
 		return deskBusiness.getReservableDeskForSelectedDays(selectedDays);
 	}

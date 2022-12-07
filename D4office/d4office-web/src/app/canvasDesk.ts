@@ -43,7 +43,7 @@ export class CanvasDesk {
                 Math.pow(x-this.xpos, 2) + 
                 Math.pow(y-this.ypos, 2)
             )
-        if(distance<this.radius && this.canBeReserved && this.isReserved){
+        if(distance<this.radius && this.canBeReserved && !this.isReserved){
             console.log('bingo');
             this.changeColor('#0873ff');
 
@@ -51,7 +51,7 @@ export class CanvasDesk {
             this.changeColor(this.getColor());
             this.draw(this.ctx);
         }
-        return distance<this.radius && this.canBeReserved && this.isReserved;            
+        return distance<this.radius && this.canBeReserved && !this.isReserved;            
     }
 
     changeColor(newColor: string){
@@ -61,9 +61,9 @@ export class CanvasDesk {
 
     getColor(): string{
         if(this.isReserved != null){
-            if(this.canBeReserved && this.isReserved)    
-            return '#70fa9c';
             if(this.canBeReserved && !this.isReserved)    
+            return '#70fa9c';
+            if(this.canBeReserved && this.isReserved)    
             return '#7a5158';
         }
         if(this.canBeReserved){

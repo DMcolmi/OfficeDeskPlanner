@@ -18,7 +18,7 @@ export class CanvasPageComponent implements OnInit {
   canvasCard: ElementRef
 
   image = new Image();
-  ctx: CanvasRenderingContext2D | null;
+  ctx: CanvasRenderingContext2D;
   private winH: number;
   private winW: number;
   private imgW: number;
@@ -40,7 +40,7 @@ export class CanvasPageComponent implements OnInit {
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
 
-    this.ctx = this.canvas.nativeElement.getContext("2d");
+    this.ctx = this.canvas.nativeElement!.getContext("2d")!;
     if(this.ctx)
       this.ctx.globalAlpha = 0.7;
 
@@ -49,13 +49,7 @@ export class CanvasPageComponent implements OnInit {
         var deskListAbsolutePosition = desksConf;
 
         deskListAbsolutePosition.forEach(deskConf => {
-          let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved);
-          if (this.ctx) {
-            desk.draw(this.ctx);
-            this.deskListRelativePosition.push(desk);
-            if(deskConf.canBeReserved && deskConf.isReserved)
-              this.bookableDesks.push(desk);
-          }
+          this.drawDesk(deskConf);
         });
       },
       error: (e) => console.log('error: ', e),
@@ -102,8 +96,30 @@ export class CanvasPageComponent implements OnInit {
   }
 
   onDatePickerClick(){
-    console.log("date list updated");
+    console.log(this.modelDatePicker);
     
+    this.desksService.getReservableDeskForSelectedDays(this.modelDatePicker).subscribe({
+      next: reservableDesks => {
+        this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+        reservableDesks.forEach( deskConf => {
+          let desk = this.drawDesk(deskConf);
+          if(deskConf.canBeReserved && !deskConf.isReserved)
+            this.bookableDesks.push(desk);})
+        
+          this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);    
+
+      },
+      error: (e) => console.log('error: ', e)
+    })
+    
+  }
+
+  private drawDesk(deskConf: CanvasDesk) {
+    let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved);
+    desk.draw(this.ctx);
+    this.deskListRelativePosition.push(desk);
+    return desk;
   }
 }
 
