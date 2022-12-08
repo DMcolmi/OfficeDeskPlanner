@@ -8,6 +8,7 @@ import com.dedalus.d4office.dto.ReservationDto;
 import com.dedalus.d4office.entity.Reservation;
 import com.dedalus.d4office.entity.embeddedid.ReservationId;
 import com.dedalus.d4office.repository.ReservationRepository;
+import com.dedalus.d4office.utils.ReservationUtils;
 
 @Service
 public class ReservationBusiness {
@@ -15,12 +16,11 @@ public class ReservationBusiness {
 	@Autowired
 	ReservationRepository reservationRepository;
 	
-	@Transactional
 	public void bookDesks(ReservationDto reservation) {		
 		reservation.getDeskToBeReserved().stream().forEach(desk -> 
 			reservation.getReservationDates().stream().forEach( bookingDate -> {
 				
-				ReservationId resId = new ReservationId(desk.getDeskNo(), desk.getOfficeId(), bookingDate);
+				ReservationId resId = new ReservationId(desk.getDeskNo(), desk.getOfficeId(), ReservationUtils.formatDate(bookingDate));
 				Reservation res = new Reservation(resId, reservation.getMailId());
 				reservationRepository.save(res);
 				

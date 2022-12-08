@@ -44,20 +44,7 @@ export class CanvasPageComponent implements OnInit {
     if(this.ctx)
       this.ctx.globalAlpha = 0.7;
 
-    this.desksService.getDesksConf('MI').subscribe({
-      next: (desksConf) => {
-        var deskListAbsolutePosition = desksConf;
-
-        deskListAbsolutePosition.forEach(deskConf => {
-          this.drawDesk(deskConf);
-        });
-      },
-      error: (e) => console.log('error: ', e),
-      complete: () => {
-        console.log('finish');        
-        this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);        
-      }
-    });
+    this.drawDeskConfiguration();
 
     window.addEventListener("resize", () => {
       window.location.reload();
@@ -84,6 +71,8 @@ export class CanvasPageComponent implements OnInit {
     
   }
 
+
+
   onSelectedDeskFromDropdown(){
       console.log(this.selectedDesk);   
       this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
@@ -96,23 +85,52 @@ export class CanvasPageComponent implements OnInit {
   }
 
   onDatePickerClick(){
-    console.log(this.modelDatePicker);
+    if(this.modelDatePicker.length > 0 )
+      this.drawReservableDeskForSelectedDays();
     
+    this.drawDeskConfiguration();
+  }
+
+  private drawReservableDeskForSelectedDays() {
+    console.log(this.modelDatePicker);
+
     this.desksService.getReservableDeskForSelectedDays(this.modelDatePicker).subscribe({
       next: reservableDesks => {
         this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
-        reservableDesks.forEach( deskConf => {
+        reservableDesks.forEach(deskConf => {
           let desk = this.drawDesk(deskConf);
-          if(deskConf.canBeReserved && !deskConf.isReserved)
-            this.bookableDesks.push(desk);})
-        
-          this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);    
+          if (deskConf.canBeReserved && !deskConf.isReserved)
+            this.bookableDesks.push(desk);
+        });
+
+        this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
 
       },
       error: (e) => console.log('error: ', e)
-    })
-    
+    });
+  }
+
+  private drawDeskConfiguration() {
+    this.desksService.getDesksConf('MI').subscribe({
+      next: (desksConf) => {
+
+        this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+        var deskListAbsolutePosition = desksConf;
+
+        deskListAbsolutePosition.forEach(deskConf => {
+          this.drawDesk(deskConf);
+        });
+
+        this.bookableDesks = new Array;
+      },
+      error: (e) => console.log('error: ', e),
+      complete: () => {
+        console.log('finish');
+        this.ctx.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
+      }
+    });
   }
 
   private drawDesk(deskConf: CanvasDesk) {

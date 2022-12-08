@@ -25,6 +25,8 @@ export class DesksServiceService {
     let httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
+    console.log(modelDatePicker);
+    
     return this.http.post<CanvasDesk[]>(`${this.getReservableDeskForDaysUrl}`,  modelDatePicker);
   }
 
