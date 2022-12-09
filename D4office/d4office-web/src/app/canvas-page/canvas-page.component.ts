@@ -125,8 +125,8 @@ export class CanvasPageComponent implements OnInit {
       },
       error: (e) => console.log('error: ', e),
       complete: () => {
-        console.log('drawDeskConfiguration finish');
         this.ctx.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
+        console.log('drawDeskConfiguration finish');
       }
     });
   }

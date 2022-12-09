@@ -26,8 +26,7 @@ export class CanvasPanTestComponent implements OnInit {
     this.ctx = this.canvas.getContext("2d")!;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
-    //this.cameraOffset =  { x: window.innerWidth/2, y: window.innerHeight/2 };
-    this.cameraOffset =  { x: 0, y: 0 };
+    this.cameraOffset =  { x: window.innerWidth/2, y: window.innerHeight/2 };
     this.previousCameraOffset =  { x: 0, y: 0 };
 
 
@@ -38,29 +37,26 @@ export class CanvasPanTestComponent implements OnInit {
     this.draw();
   }
 
-  public draw() { 
+  public draw() {
+    //reset canvas dimension after last iteration
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
     
-    //this.ctx.translate( window.innerWidth / 2, window.innerHeight / 2 );
+    //translate to the canvas centre before zooming
+    this.ctx.translate( window.innerWidth / 2, window.innerHeight / 2 );
+    //zooming
     this.ctx.scale(this.cameraZoom, this.cameraZoom);
-    //this.ctx.translate( -window.innerWidth / 2 + this.cameraOffset.x, -window.innerHeight / 2 + this.cameraOffset.y );
-    
-    {
-      if(this.cameraOffset.x != 0 && this.cameraOffset.y !=0)
-        this.ctx.translate(this.cameraOffset.x -this.previousCameraOffset.x , this.cameraOffset.y -this.previousCameraOffset.y);
-      
-       this.previousCameraOffset.x = this.cameraOffset.x;
-       this.previousCameraOffset.y = this.cameraOffset.y;
-    }
+    //translate
+    this.ctx.translate( -window.innerWidth / 2 + this.cameraOffset.x, -window.innerHeight / 2 + this.cameraOffset.y );
 
-    this.cameraOffset.x = 0;
-    this.cameraOffset.y = 0;
-    
-    
     this.ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
 
     //parte che disegna    
-    this.ctx.font = "50px Verdana";
-    this.ctx.fillText("Big smile! Move me!", 100, 100);
+    this.ctx.fillStyle = "#991111";
+    this.ctx.fillRect(50,50,100,100);
+    console.log("finish draw");
+    //fine parte che disegna
+    
     
     //fine parte che disegna
     requestAnimationFrame(() => this.draw());    
@@ -69,8 +65,8 @@ export class CanvasPanTestComponent implements OnInit {
   onPonterDown(e: MouseEvent){
 
     this.isDragging = true;
-    this.dragStart.x = getEventLocation(e, this.canvas).x;
-    this.dragStart.y = getEventLocation(e, this.canvas).y;
+    this.dragStart.x = getEventLocation(e, this.canvas).x -this.cameraOffset.x;
+    this.dragStart.y = getEventLocation(e, this.canvas).y -this.cameraOffset.y;
   }
 
   onPointerUp(e: MouseEvent){
