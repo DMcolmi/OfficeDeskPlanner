@@ -1,10 +1,9 @@
 package com.dedalus.d4office;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
+import java.util.Date;
 
 import com.dedalus.d4office.dto.DeskDto;
 import com.dedalus.d4office.dto.ReservationDto;
@@ -27,9 +26,9 @@ public class JsonObjMapper {
    
 		
 		DeskDto desk = new DeskDto(1, "MI", null, null, false, false);
-		ArrayList<LocalDate> dateList = new ArrayList<>();
+		ArrayList<Date> dateList = new ArrayList<>();
 		ArrayList<DeskDto> deskList = new ArrayList<>();
-		dateList.add(LocalDate.now());
+		dateList.add(new Date());
 		deskList.add(desk);		
 		ReservationDto res = new ReservationDto(deskList, dateList, "davide@mail.it");
 		

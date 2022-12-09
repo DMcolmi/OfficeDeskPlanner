@@ -7,8 +7,8 @@
       <mat-card-content>
         <mat-form-field class="w-100">
           <ngx-multiple-dates #datePicker [matDatepicker]="pickerWithToggleButton" name="modelWithToggleButton"
-            placeholder="Choose a date" [(ngModel)]="modelDatePicker" (dateChange)="onDatePickerClick()"
-            (remove)="onDatePickerClick()">
+            placeholder="Choose a date" [(ngModel)]="modelDatePicker" (dateChange)="drawDeskStatus()"
+            (remove)="drawDeskStatus()">
           </ngx-multiple-dates>
           <mat-datepicker-toggle matSuffix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
           <mat-datepicker #pickerWithToggleButton></mat-datepicker>
@@ -26,7 +26,7 @@
           </mat-select>
         </mat-form-field>
         <div align="end">
-          <button mat-raised-button [disabled]="selectedDesk == null">Reserve</button>
+          <button mat-raised-button [disabled]="selectedDesk == null" (click)="bookDesks()">Reserve</button>
         </div>
       </mat-card-content>
     </mat-card>

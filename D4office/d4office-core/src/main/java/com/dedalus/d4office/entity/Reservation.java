@@ -19,4 +19,5 @@ public class Reservation {
 	@Id
 	private ReservationId reservationId;	
 	private String mailId;
+	private boolean isReserved;
 }

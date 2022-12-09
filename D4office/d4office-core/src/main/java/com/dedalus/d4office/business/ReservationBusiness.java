@@ -21,7 +21,7 @@ public class ReservationBusiness {
 			reservation.getReservationDates().stream().forEach( bookingDate -> {
 				
 				ReservationId resId = new ReservationId(desk.getDeskNo(), desk.getOfficeId(), ReservationUtils.formatDate(bookingDate));
-				Reservation res = new Reservation(resId, reservation.getMailId());
+				Reservation res = new Reservation(resId, reservation.getMailId(), true);
 				reservationRepository.save(res);
 				
 			})

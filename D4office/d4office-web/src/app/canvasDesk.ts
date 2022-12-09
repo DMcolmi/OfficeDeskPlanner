@@ -8,14 +8,16 @@ export class CanvasDesk {
     deskNo: number;
 	canBeReserved: boolean;
 	isReserved: Boolean;
+    officeId: String;
 
-    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean, isReserved: Boolean){
+    constructor(xpos: number, ypos: number, radius: number, deskNo: number, canBeReserved: boolean, isReserved: Boolean, officeId: String){
         this.xpos = xpos;
         this.ypos = ypos;
         this.radius = radius;
         this.deskNo = deskNo;
         this.canBeReserved = canBeReserved;
         this.isReserved = isReserved;
+        this.officeId = officeId;
         this.color = this.getColor();
     }
 
