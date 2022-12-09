@@ -25,9 +25,11 @@
               {{desk.deskNo}} </mat-option>
           </mat-select>
         </mat-form-field>
-        <div align="end">
+        <mat-card-actions>
+        <div align="end">          
           <button mat-raised-button [disabled]="selectedDesk == null" (click)="bookDesks()">Reserve</button>
         </div>
+      </mat-card-actions>
       </mat-card-content>
     </mat-card>
   </form>

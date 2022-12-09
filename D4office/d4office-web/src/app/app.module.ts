@@ -19,6 +19,8 @@ import { CanvasPanTestComponent } from './canvas-pan-test/canvas-pan-test.compon
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 
@@ -44,7 +46,9 @@ import {MatDividerModule} from '@angular/material/divider';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

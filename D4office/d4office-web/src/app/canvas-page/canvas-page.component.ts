@@ -4,6 +4,8 @@ import { MultipleDatesComponent } from 'ngx-multiple-dates';
 import { CanvasDesk } from '../canvasDesk';
 import { DesksServiceService } from '../desks-service.service';
 import { Reservation } from '../reservation';
+import {MatSnackBar} from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-canvas-page',
@@ -27,9 +29,10 @@ export class CanvasPageComponent implements OnInit {
   bookableDesks = new Array<CanvasDesk>();
   modelDatePicker = new Array<Date>();
   model: any;
-  selectedDesk: CanvasDesk;
+  selectedDesk: CanvasDesk | null;
 
-  constructor(private desksService: DesksServiceService) { }
+  constructor(private desksService: DesksServiceService, public snackBar: MatSnackBar
+    ) { }
 
   ngOnInit(): void {
 
@@ -51,7 +54,6 @@ export class CanvasPageComponent implements OnInit {
       window.location.reload();
     })
 
-
     this.canvas.nativeElement.addEventListener('click', (event) => {
       this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       const canvasRelavitveBound = this.canvas.nativeElement.getBoundingClientRect();
@@ -69,8 +71,6 @@ export class CanvasPageComponent implements OnInit {
     })
   }
 
-
-
   onSelectedDeskFromDropdown() {
     console.log(this.selectedDesk);
     this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
@@ -78,7 +78,7 @@ export class CanvasPageComponent implements OnInit {
       desk.click(0, 0);
     });
 
-    this.selectedDesk.click(this.selectedDesk.xpos, this.selectedDesk.ypos);
+    this.selectedDesk!.click(this.selectedDesk!.xpos, this.selectedDesk!.ypos);
     this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
   }
 
@@ -140,14 +140,17 @@ export class CanvasPageComponent implements OnInit {
 
   bookDesks() {
     var desks = new Array<CanvasDesk>();
-    desks.push(this.selectedDesk);
+    desks.push(this.selectedDesk!);
     var reservation = new Reservation(desks, this.modelDatePicker, "prova@gmail.com")
 
     this.desksService.bookDesks(reservation).subscribe({
       next: (result) => { console.log(result) },
       error: (e) => console.log('error: ', e),
       complete: () => {
+        
+        let snackBarRef = this.snackBar.open( 'Thanks! Your reservation is confirmed',"Ok", {duration: 2000});
         this.modelDatePicker = new Array<Date>();
+        this.selectedDesk = null;
         this.drawDeskStatus()
       }
     })    

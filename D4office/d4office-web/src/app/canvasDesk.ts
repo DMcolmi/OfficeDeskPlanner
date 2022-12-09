@@ -35,7 +35,10 @@ export class CanvasDesk {
         ctx.closePath();
 
         ctx.fillStyle = '#000000';
-       // ctx.fillText(this.seatNo.toString(), this.xPos - (this.radius/2), this.yPos - this.radius);
+        //ctx.font = '${this.radius}px'
+        ctx.font = `${this.radius}px sans-serif bold`;
+        ctx.textAlign = 'center';
+        ctx.fillText(this.deskNo.toString(), this.xpos, this.ypos + this.radius/2);
 
     }
 
@@ -45,15 +48,16 @@ export class CanvasDesk {
                 Math.pow(x-this.xpos, 2) + 
                 Math.pow(y-this.ypos, 2)
             )
-        if(distance<this.radius && this.canBeReserved && !this.isReserved){
+        if(distance<this.radius && this.canBeReserved && (this.isReserved != null && !this.isReserved)){
             console.log('bingo');
+            console.log(this);
             this.changeColor('#0873ff');
 
         } else {                       
             this.changeColor(this.getColor());
             this.draw(this.ctx);
         }
-        return distance<this.radius && this.canBeReserved && !this.isReserved;            
+        return distance<this.radius && this.canBeReserved && (this.isReserved != null && !this.isReserved);            
     }
 
     changeColor(newColor: string){
