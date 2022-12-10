@@ -6,9 +6,9 @@
       </mat-card-header>
       <mat-card-content>
         <mat-form-field class="w-100">
-          <ngx-multiple-dates #datePicker [matDatepicker]="pickerWithToggleButton" name="modelWithToggleButton"
-            placeholder="Choose a date" [(ngModel)]="modelDatePicker" (dateChange)="drawDeskStatus()"
-            (remove)="drawDeskStatus()">
+          <ngx-multiple-dates [matDatepicker]="pickerWithToggleButton" name="modelDatePicker"
+            placeholder="Choose a date" [(ngModel)]="modelDatePicker" (dateChange)="drawDesksAndPlan()"
+            (remove)="drawDesksAndPlan()">
           </ngx-multiple-dates>
           <mat-datepicker-toggle matSuffix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
           <mat-datepicker #pickerWithToggleButton></mat-datepicker>

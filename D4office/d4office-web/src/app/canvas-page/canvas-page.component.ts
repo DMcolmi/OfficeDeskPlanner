@@ -44,45 +44,55 @@ export class CanvasPageComponent implements OnInit {
     this.canvas.nativeElement.height = this.winH;
     this.canvas.nativeElement.width = this.winW;
 
-    this.ctx = this.canvas.nativeElement!.getContext("2d")!;
-    if (this.ctx)
-      this.ctx.globalAlpha = 0.7;
+    this.ctx = this.canvas.nativeElement!.getContext("2d")!;    
+    this.ctx.globalAlpha = 0.7;
 
-    this.drawDeskConfiguration();
+    this.drawDesksAndPlan();
 
     window.addEventListener("resize", () => {
       window.location.reload();
     })
 
     this.canvas.nativeElement.addEventListener('click', (event) => {
-      this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      this.clearCanvas();
       const canvasRelavitveBound = this.canvas.nativeElement.getBoundingClientRect();
       const x = event.clientX - canvasRelavitveBound.left;
       const y = event.clientY - canvasRelavitveBound.top;
+      var isSelected: boolean = false;
 
-      this.deskListRelativePosition.forEach(desk => {
-        var isSelected: Boolean = desk.click(x, y);
-        if (isSelected) {
-          this.selectedDesk = desk;
+      this.deskListRelativePosition.forEach(desk => {        
+        if (desk.click(x, y)) {
+          isSelected = true;
+          this.selectedDesk = desk;          
         }
       });
-      this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
-      console.log(this.selectedDesk);
+      if(!isSelected && this.selectedDesk != null){
+        this.selectedDesk!.click(this.selectedDesk!.xpos, this.selectedDesk!.ypos);
+      }
+       this.drawPlan();
     })
   }
 
   onSelectedDeskFromDropdown() {
     console.log(this.selectedDesk);
-    this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.clearCanvas();
     this.deskListRelativePosition.forEach(desk => {
       desk.click(0, 0);
     });
 
     this.selectedDesk!.click(this.selectedDesk!.xpos, this.selectedDesk!.ypos);
-    this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
+    this.drawPlan();
   }
 
-  drawDeskStatus() {
+  private drawPlan(){
+    this.ctx.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);    
+  }
+
+  private clearCanvas(){
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  }
+
+  drawDesksAndPlan() {
     if (this.modelDatePicker.length > 0){
       this.drawReservableDeskForSelectedDays();
     } else {
@@ -93,7 +103,7 @@ export class CanvasPageComponent implements OnInit {
   private drawReservableDeskForSelectedDays() {
     this.desksService.getReservableDeskForSelectedDays(this.modelDatePicker).subscribe({
       next: reservableDesks => {
-        this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+        this.clearCanvas();
 
         reservableDesks.forEach(deskConf => {
           let desk = this.drawDesk(deskConf);
@@ -101,7 +111,7 @@ export class CanvasPageComponent implements OnInit {
             this.bookableDesks.push(desk);
         });
 
-        this.ctx?.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
+        this.drawPlan();
 
       },
       error: (e) => console.log('error: ', e),
@@ -113,7 +123,7 @@ export class CanvasPageComponent implements OnInit {
     this.desksService.getDesksConf('MI').subscribe({
       next: (desksConf) => {
 
-        this.ctx?.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+        this.clearCanvas();
 
         var deskListAbsolutePosition = desksConf;
 
@@ -125,7 +135,7 @@ export class CanvasPageComponent implements OnInit {
       },
       error: (e) => console.log('error: ', e),
       complete: () => {
-        this.ctx.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);
+        this.drawPlan();
         console.log('drawDeskConfiguration finish');
       }
     });
@@ -151,7 +161,7 @@ export class CanvasPageComponent implements OnInit {
         let snackBarRef = this.snackBar.open( 'Thanks! Your reservation is confirmed',"Ok", {duration: 2000});
         this.modelDatePicker = new Array<Date>();
         this.selectedDesk = null;
-        this.drawDeskStatus()
+        this.drawDesksAndPlan()
       }
     })    
   }
