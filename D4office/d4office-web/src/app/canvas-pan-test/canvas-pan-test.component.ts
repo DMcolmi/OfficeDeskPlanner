@@ -28,6 +28,7 @@ export class CanvasPanTestComponent implements OnInit {
   private imgW: number;  
   bookableDesks = new Array<CanvasDesk>();  
   deskListRelativePosition = new Array<CanvasDesk>();
+  selectedDesk: CanvasDesk | null;
 
   constructor(private desksService: DesksServiceService) {
   }
@@ -48,6 +49,8 @@ export class CanvasPanTestComponent implements OnInit {
     this.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onPointerMove(e));
     this.canvas.addEventListener('wheel', (e: WheelEvent) => this.adjustZoom(e.deltaY * this.SCROLL_SENSITIVITY));
 
+    this.drawDeskConfiguration();
+
     this.draw();
   }
 
@@ -66,7 +69,7 @@ export class CanvasPanTestComponent implements OnInit {
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     //parte che disegna    
-    this.drawPlan();
+    this.redrowPanAndDesk();
     //fine parte che disegna
 
 
@@ -75,7 +78,6 @@ export class CanvasPanTestComponent implements OnInit {
   }
 
   onPonterDown(e: MouseEvent) {
-
     this.isDragging = true;
     this.dragStart.x = getEventLocation(e, this.canvas).x - this.cameraOffset.x;
     this.dragStart.y = getEventLocation(e, this.canvas).y - this.cameraOffset.y;
@@ -95,7 +97,6 @@ export class CanvasPanTestComponent implements OnInit {
   adjustZoom(zoomAmount: number) {
     if (!this.isDragging) {
       this.cameraZoom += zoomAmount;
-
       this.cameraZoom = Math.min(this.cameraZoom, this.MAX_ZOOM);
       this.cameraZoom = Math.max(this.cameraZoom, this.MIN_ZOOM);
     }
@@ -130,7 +131,7 @@ export class CanvasPanTestComponent implements OnInit {
   }
 
   private drawDesk(deskConf: CanvasDesk) {
-    let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
+    let desk = new CanvasDesk((this.imgW * deskConf.xpos / 20) - window.innerWidth / 2 , (this.imgW * deskConf.ypos / 20 ) - window.innerHeight / 2 , this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
     desk.draw(this.ctx);
     this.deskListRelativePosition.push(desk);
     return desk;
@@ -138,6 +139,16 @@ export class CanvasPanTestComponent implements OnInit {
 
   private clearCanvas(){
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  redrowPanAndDesk() {
+    this.clearCanvas();
+    this.deskListRelativePosition.forEach(desk => {
+      desk.draw(this.ctx);
+    });
+
+    this.selectedDesk?.click(this.selectedDesk!.xpos, this.selectedDesk!.ypos);
+    this.drawPlan();
   }
 }
 

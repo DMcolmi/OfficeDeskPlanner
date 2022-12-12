@@ -15,7 +15,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class CanvasPageComponent implements OnInit {
 
   @ViewChild('canvas', { static: true })
-  canvas: ElementRef<HTMLCanvasElement>
+  canvasRef: ElementRef<HTMLCanvasElement>
 
   @ViewChild('canvasCard', { static: true })
   canvasCard: ElementRef
@@ -31,6 +31,20 @@ export class CanvasPageComponent implements OnInit {
   model: any;
   selectedDesk: CanvasDesk | null;
 
+  //pan and zoom stuff
+  canvas: HTMLCanvasElement;
+  cameraOffset: { x: number, y: number };
+  previousCameraOffset: { x: number, y: number };
+  isDragging = false;
+  dragStart: { x: number, y: number } = { x: 0, y: 0 };
+  cameraZoom = 1;
+  MAX_ZOOM = 2.5;
+  MIN_ZOOM = .5;
+  SCROLL_SENSITIVITY = 0.001;
+  translationX = 0;
+  translationY = 0;
+
+
   constructor(private desksService: DesksServiceService, public snackBar: MatSnackBar
     ) { }
 
@@ -38,13 +52,26 @@ export class CanvasPageComponent implements OnInit {
 
     this.image.src = "../../assets/images/piantaMilano.svg";
     this.imgW = 2000;
-    this.winH = 1000;
+    this.winH = 600;
+    this.canvas = this.canvasRef.nativeElement;
     var cardBound = this.canvasCard.nativeElement.getBoundingClientRect();
     this.winW = (cardBound.right - cardBound.left) * .96;
-    this.canvas.nativeElement.height = this.winH;
-    this.canvas.nativeElement.width = this.winW;
+    this.canvas.height = this.winH;
+    this.canvas.width = this.winW;
 
-    this.ctx = this.canvas.nativeElement!.getContext("2d")!;    
+    //pan and zoom stuff
+    this.cameraOffset = { x: this.winW / 2, y: this.winH / 2 };
+    this.previousCameraOffset = { x: 0, y: 0 };
+    this.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onPonterDown(e));
+    this.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onPointerUp(e));
+    this.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onPointerMove(e));
+    this.canvas.addEventListener('wheel', (e: WheelEvent) => {
+      this.adjustZoom(e.deltaY * this.SCROLL_SENSITIVITY);
+      e.preventDefault();
+    });
+
+
+    this.ctx = this.canvas!.getContext("2d")!;    
     this.ctx.globalAlpha = 0.7;
 
     this.drawDesksAndPlan();
@@ -53,11 +80,13 @@ export class CanvasPageComponent implements OnInit {
       window.location.reload();
     })
 
-    this.canvas.nativeElement.addEventListener('click', (event) => {
+    this.canvasRef.nativeElement.addEventListener('click', (event) => {
       this.clearCanvas();
-      const canvasRelavitveBound = this.canvas.nativeElement.getBoundingClientRect();
-      const x = event.clientX - canvasRelavitveBound.left;
-      const y = event.clientY - canvasRelavitveBound.top;
+      const canvasRelavitveBound = this.canvasRef.nativeElement.getBoundingClientRect();
+      const x = (event.clientX - canvasRelavitveBound.left - this.translationX);
+      const y = (event.clientY - canvasRelavitveBound.top - this.translationY);
+      console.log(x,y);
+      
       var isSelected: boolean = false;
 
       this.deskListRelativePosition.forEach(desk => {        
@@ -71,6 +100,8 @@ export class CanvasPageComponent implements OnInit {
       }
        this.drawPlan();
     })
+
+    this.draw();
   }
 
   onSelectedDeskFromDropdown() {
@@ -85,11 +116,12 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawPlan(){
-    this.ctx.drawImage(this.image, 0, 0, this.imgW, this.imgW * 0.5);    
+    this.ctx.drawImage(this.image, -this.winW / 2 , -this.winH / 2 , this.imgW, this.imgW * 0.5);    
   }
 
   private clearCanvas(){
-    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
+    this.ctx.globalAlpha = 0.7;
   }
 
   drawDesksAndPlan() {
@@ -104,6 +136,9 @@ export class CanvasPageComponent implements OnInit {
     this.desksService.getReservableDeskForSelectedDays(this.modelDatePicker).subscribe({
       next: reservableDesks => {
         this.clearCanvas();
+
+        this.deskListRelativePosition = new Array<CanvasDesk>;
+        this.bookableDesks = new Array<CanvasDesk>;
 
         reservableDesks.forEach(deskConf => {
           let desk = this.drawDesk(deskConf);
@@ -124,6 +159,8 @@ export class CanvasPageComponent implements OnInit {
       next: (desksConf) => {
 
         this.clearCanvas();
+        this.deskListRelativePosition = new Array<CanvasDesk>;
+        this.bookableDesks = new Array<CanvasDesk>;
 
         var deskListAbsolutePosition = desksConf;
 
@@ -142,7 +179,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawDesk(deskConf: CanvasDesk) {
-    let desk = new CanvasDesk(this.imgW * deskConf.xpos / 20, this.imgW * deskConf.ypos / 20, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
+    let desk = new CanvasDesk((this.imgW * deskConf.xpos / 20) - this.winW / 2 , (this.imgW * deskConf.ypos / 20 ) - this.winH / 2 , this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
     desk.draw(this.ctx);
     this.deskListRelativePosition.push(desk);
     return desk;
@@ -165,5 +202,80 @@ export class CanvasPageComponent implements OnInit {
       }
     })    
   }
+
+  redrowPanAndDesk() {
+    this.clearCanvas();
+    this.deskListRelativePosition.forEach(desk => {
+      desk.draw(this.ctx);
+    });
+
+    this.selectedDesk?.click(this.selectedDesk!.xpos, this.selectedDesk!.ypos);
+    this.drawPlan();
+  }
+
+
+  //pan and zoom stuff
+
+  public draw() {
+    //reset canvas dimension after last iteration
+    this.canvas.width = this.winW;
+    this.canvas.height = this.winH;
+
+    //translate to the canvas centre before zooming
+    this.ctx.translate(this.winW / 2, this.winH / 2);
+    //zooming
+    this.ctx.scale(this.cameraZoom, this.cameraZoom);
+    //translate
+    this.ctx.translate(-this.winW / 2 + this.cameraOffset.x, -this.winH / 2 + this.cameraOffset.y);
+
+    this.translationX = ( + this.cameraOffset.x);
+    this.translationY = ( + this.cameraOffset.y);
+
+    this.ctx.clearRect(0, 0, this.winW, this.winH);
+
+    //parte che disegna    
+    this.redrowPanAndDesk();
+    //fine parte che disegna
+
+
+    //fine parte che disegna
+    requestAnimationFrame(() => this.draw());
+  }
+
+
+  onPonterDown(e: MouseEvent) {
+    this.isDragging = true;
+    this.dragStart.x = getEventLocation(e, this.canvas).x - this.cameraOffset.x;
+    this.dragStart.y = getEventLocation(e, this.canvas).y - this.cameraOffset.y;
+  }
+
+  onPointerUp(e: MouseEvent) {
+    this.isDragging = false;
+    this.canvas.style.cursor = 'default';
+  }
+
+  onPointerMove(e: MouseEvent) {
+    if (this.isDragging) {
+      this.canvas.style.cursor = 'move';
+      this.cameraOffset.x = (getEventLocation(e, this.canvas).x - (this.dragStart.x));
+      this.cameraOffset.y = (getEventLocation(e, this.canvas).y - (this.dragStart.y));
+    }
+  }
+
+  adjustZoom(zoomAmount: number) {
+    if (!this.isDragging) {
+      this.cameraZoom += zoomAmount;
+      this.cameraZoom = Math.min(this.cameraZoom, this.MAX_ZOOM);
+      this.cameraZoom = Math.max(this.cameraZoom, this.MIN_ZOOM);
+    }
+  }
+
+
 }
 
+function getEventLocation(e: MouseEvent, canvas: HTMLCanvasElement): any {
+  if (e.clientX && e.clientY) {
+    const canvasRelavitveBound = canvas.getBoundingClientRect();
+    return { x: e.clientX - canvasRelavitveBound.left, y: e.clientY - canvasRelavitveBound.top };
+  }
+}

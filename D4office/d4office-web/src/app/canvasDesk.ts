@@ -23,23 +23,34 @@ export class CanvasDesk {
 
     draw(ctx: CanvasRenderingContext2D){
         this.ctx = ctx;
+        this.drawCircle(ctx, this.radius);
+        this.drawText(ctx);
+    }
+
+    drawSelected(){
+        this.changeColor('#29b0ff');
+        this.drawCircle(this.ctx, this.radius*2);
+        this.drawText(this.ctx);
+    }
+
+    private drawText(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = '#000000';
+        ctx.font = `${this.radius}px sans-serif bold`;
+        ctx.textAlign = 'center';
+        ctx.fillText(this.deskNo.toString(), this.xpos, this.ypos + this.radius / 2);
+    }
+
+    private drawCircle(ctx: CanvasRenderingContext2D, radius: number) {
         ctx.beginPath();
-        ctx.imageSmoothingEnabled= false;
+        ctx.imageSmoothingEnabled = false;
         ctx.lineCap = 'round';
-        ctx.arc(this.xpos, this.ypos, this.radius, 0, Math.PI*2, false);
+        ctx.arc(this.xpos, this.ypos, radius, 0, Math.PI * 2, false);
         ctx.strokeStyle = 'grey';
         ctx.lineWidth = .5;
         ctx.fillStyle = this.color;
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
-
-        ctx.fillStyle = '#000000';
-        //ctx.font = '${this.radius}px'
-        ctx.font = `${this.radius}px sans-serif bold`;
-        ctx.textAlign = 'center';
-        ctx.fillText(this.deskNo.toString(), this.xpos, this.ypos + this.radius/2);
-
     }
 
     click(x: number, y: number): Boolean {
@@ -49,9 +60,7 @@ export class CanvasDesk {
                 Math.pow(y-this.ypos, 2)
             )
         if(distance<this.radius && this.canBeReserved && (this.isReserved != null && !this.isReserved)){
-            console.log('bingo');
-            console.log(this);
-            this.changeColor('#0873ff');
+            this.drawSelected();
 
         } else {                       
             this.changeColor(this.getColor());
@@ -68,9 +77,9 @@ export class CanvasDesk {
     getColor(): string{
         if(this.isReserved != null){
             if(this.canBeReserved && !this.isReserved)    
-            return '#70fa9c';
+            return '#237d3b';
             if(this.canBeReserved && this.isReserved)    
-            return '#7a5158';
+            return '#ff5959';
         }
         if(this.canBeReserved){
             return '#d9dbd9'
