@@ -82,8 +82,8 @@ export class CanvasDesk {
             return '#ff5959';
         }
         if(this.canBeReserved){
-            return '#d9dbd9'
+            return '#ffffff'
         }
-        return '#ffffff';
+        return '#d9dbd9';
     }
 }

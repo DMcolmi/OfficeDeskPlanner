@@ -52,7 +52,7 @@ export class CanvasPageComponent implements OnInit {
 
     this.image.src = "../../assets/images/piantaMilano.svg";
     this.imgW = 2000;
-    this.winH = 600;
+    this.winH = 550;
     this.canvas = this.canvasRef.nativeElement;
     var cardBound = this.canvasCard.nativeElement.getBoundingClientRect();
     this.winW = (cardBound.right - cardBound.left) * .96;
@@ -83,9 +83,12 @@ export class CanvasPageComponent implements OnInit {
     this.canvasRef.nativeElement.addEventListener('click', (event) => {
       this.clearCanvas();
       const canvasRelavitveBound = this.canvasRef.nativeElement.getBoundingClientRect();
-      const x = (event.clientX - canvasRelavitveBound.left - this.translationX);
-      const y = (event.clientY - canvasRelavitveBound.top - this.translationY);
+      const x = ((event.clientX- canvasRelavitveBound.left)/this.cameraZoom - this.translationX);
+      const y = ((event.clientY- canvasRelavitveBound.top)/this.cameraZoom - this.translationY);
       console.log(x,y);
+      console.log(this.translationX,this.translationY);
+      console.log(canvasRelavitveBound.left,canvasRelavitveBound.top);
+      console.log(event.clientX,event.clientY);
       
       var isSelected: boolean = false;
 
@@ -116,7 +119,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawPlan(){
-    this.ctx.drawImage(this.image, -this.winW / 2 , -this.winH / 2 , this.imgW, this.imgW * 0.5);    
+    this.ctx.drawImage(this.image, -this.winW / 2 , -this.winH / 2 -400, this.imgW, this.imgW * 0.5);    
   }
 
   private clearCanvas(){
@@ -179,7 +182,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawDesk(deskConf: CanvasDesk) {
-    let desk = new CanvasDesk((this.imgW * deskConf.xpos / 20) - this.winW / 2 , (this.imgW * deskConf.ypos / 20 ) - this.winH / 2 , this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
+    let desk = new CanvasDesk((this.imgW * deskConf.xpos / 20) - this.winW / 2 , (this.imgW * deskConf.ypos / 20 ) - this.winH / 2 -400, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
     desk.draw(this.ctx);
     this.deskListRelativePosition.push(desk);
     return desk;
@@ -245,8 +248,8 @@ export class CanvasPageComponent implements OnInit {
 
   onPonterDown(e: MouseEvent) {
     this.isDragging = true;
-    this.dragStart.x = getEventLocation(e, this.canvas).x - this.cameraOffset.x;
-    this.dragStart.y = getEventLocation(e, this.canvas).y - this.cameraOffset.y;
+    this.dragStart.x = getEventLocation(e, this.canvas).x/this.cameraZoom - this.cameraOffset.x;
+    this.dragStart.y = getEventLocation(e, this.canvas).y/this.cameraZoom - this.cameraOffset.y;
   }
 
   onPointerUp(e: MouseEvent) {
@@ -257,8 +260,8 @@ export class CanvasPageComponent implements OnInit {
   onPointerMove(e: MouseEvent) {
     if (this.isDragging) {
       this.canvas.style.cursor = 'move';
-      this.cameraOffset.x = (getEventLocation(e, this.canvas).x - (this.dragStart.x));
-      this.cameraOffset.y = (getEventLocation(e, this.canvas).y - (this.dragStart.y));
+      this.cameraOffset.x = (getEventLocation(e, this.canvas).x/this.cameraZoom - (this.dragStart.x));
+      this.cameraOffset.y = (getEventLocation(e, this.canvas).y/this.cameraZoom - (this.dragStart.y));
     }
   }
 

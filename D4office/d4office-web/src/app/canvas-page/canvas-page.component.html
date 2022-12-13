@@ -7,7 +7,7 @@
       <mat-card-content>
         <mat-form-field class="w-100">
           <ngx-multiple-dates [matDatepicker]="pickerWithToggleButton" name="modelDatePicker"
-            placeholder="1. choose a date(s)" [(ngModel)]="modelDatePicker" (dateChange)="drawDesksAndPlan()"
+            placeholder="1. pick the days" [(ngModel)]="modelDatePicker" (dateChange)="drawDesksAndPlan()"
             (remove)="drawDesksAndPlan()">
           </ngx-multiple-dates>
           <mat-datepicker-toggle matSuffix [for]="pickerWithToggleButton"></mat-datepicker-toggle>
@@ -19,7 +19,7 @@
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field> -->
         <mat-form-field class="w-100">
-          <mat-label>2. choose a desk</mat-label>
+          <mat-label>2. pick the desk</mat-label>
           <mat-select [(value)]="selectedDesk" style="text-align: center;">
             <mat-option *ngFor="let desk of bookableDesks" [value]=desk (click)="onSelectedDeskFromDropdown()">
               {{desk.deskNo}} </mat-option>
@@ -37,7 +37,7 @@
     <div #canvasCard>
       <mat-card>
         <mat-card-header>
-          <mat-card-title>Office Plan</mat-card-title>
+          <mat-card-title>Office floor plan</mat-card-title>
           <mat-card-subtitle>click and drag to move the plan (zoom {{cameraZoom}})</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
