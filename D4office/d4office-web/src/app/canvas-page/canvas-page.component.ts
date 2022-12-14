@@ -78,17 +78,19 @@ export class CanvasPageComponent implements OnInit {
 
     window.addEventListener("resize", () => {
       window.location.reload();
-    })
+    })  
 
     this.canvasRef.nativeElement.addEventListener('click', (event) => {
       this.clearCanvas();
       const canvasRelavitveBound = this.canvasRef.nativeElement.getBoundingClientRect();
-      const x = ((event.clientX- canvasRelavitveBound.left)/this.cameraZoom - this.translationX);
-      const y = ((event.clientY- canvasRelavitveBound.top)/this.cameraZoom - this.translationY);
+      const x = (event.clientX- canvasRelavitveBound.left) - this.translationX*this.cameraZoom;
+      const y = (event.clientY- canvasRelavitveBound.top)- this.translationY*this.cameraZoom;
       console.log(x,y);
       console.log(this.translationX,this.translationY);
       console.log(canvasRelavitveBound.left,canvasRelavitveBound.top);
       console.log(event.clientX,event.clientY);
+      console.log(-this.winW / 2 );
+      
       
       var isSelected: boolean = false;
 
