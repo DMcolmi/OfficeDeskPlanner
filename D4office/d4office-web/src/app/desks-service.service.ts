@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CanvasDesk } from './canvasDesk';
+import { Office } from './office';
 import { Reservation } from './reservation';
 
 
@@ -11,6 +12,7 @@ import { Reservation } from './reservation';
 export class DesksServiceService {
 
   private baseUrl = 'http://localhost:8080/api/desks';
+  private baseOfficeUrl = 'http://localhost:8080/api/offices';
   private desksUrl = this.baseUrl;
   private getReservableDeskForDaysUrl =  this.baseUrl + '/getReservableDeskForDays';
   private bookDesksUrl =  this.baseUrl + '/book';
@@ -29,5 +31,9 @@ export class DesksServiceService {
 
   bookDesks(reservation: Reservation): Observable<unknown>{
     return this.http.post(`${this.bookDesksUrl}`, reservation);
+  }
+
+  getOfficeById(officeId: String): Observable<Office>{
+    return this.http.get<Office>(`${this.baseOfficeUrl}/${officeId}`);
   }
 }

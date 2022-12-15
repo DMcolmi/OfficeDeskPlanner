@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeskDto {
-	
+public class DeskDto {	
 	private int deskNo;
 	private String officeId;
 	private Double xPos;

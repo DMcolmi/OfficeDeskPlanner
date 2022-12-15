@@ -5,6 +5,7 @@ import { CanvasDesk } from '../canvasDesk';
 import { DesksServiceService } from '../desks-service.service';
 import { Reservation } from '../reservation';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { Office } from '../office';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class CanvasPageComponent implements OnInit {
   modelDatePicker = new Array<Date>();
   model: any;
   selectedDesk: CanvasDesk | null;
+  office: Office = new Office();
 
   //pan and zoom stuff
   canvas: HTMLCanvasElement;
@@ -50,6 +52,7 @@ export class CanvasPageComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.initOffice();
     this.image.src = "../../assets/images/piantaMilano.svg";
     this.imgW = 2000;
     this.winH = 550;
@@ -101,6 +104,15 @@ export class CanvasPageComponent implements OnInit {
     })
 
     this.draw();
+  }
+
+  private initOffice() {
+    this.desksService.getOfficeById("MI").subscribe(
+      {
+        next: officeDto => { this.office = officeDto; },
+        complete: () => { console.log(this.office); }
+      }
+    );
   }
 
   onSelectedDeskFromDropdown() {
@@ -216,6 +228,7 @@ export class CanvasPageComponent implements OnInit {
   //pan and zoom stuff
 
   public draw() {
+
     //reset canvas dimension after last iteration
     this.canvas.width = this.winW;
     this.canvas.height = this.winH;
