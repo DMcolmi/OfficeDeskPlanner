@@ -19,4 +19,5 @@ public class OfficeDto {
 	private Double radiusScaleFactor;
 	private Blob officeLogo;
 	private Blob officePlan;
+	private String address;
 }

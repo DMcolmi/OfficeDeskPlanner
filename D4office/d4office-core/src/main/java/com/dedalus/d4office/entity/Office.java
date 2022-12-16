@@ -31,4 +31,5 @@ public class Office {
 	private Double radiusScaleFactor;
 	private Blob officeLogo;
 	private Blob officePlan;
+	private String address;
 }

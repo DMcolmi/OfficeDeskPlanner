@@ -1,14 +1,11 @@
 export class Office {
     officeId: String = "";	
 	officeDesc: String = "";	
-	xDim: Number = 0;
-	yDim: Number = 0;
-	yOnXRatio: Number = 0;
-	yLenght: Number = 2000;
-	radiusScaleFactor: Number = 0;
-
-    public getYLenght(): Number {
-        return this.yLenght;
-    }
+	xDim: number = 0;
+	yDim: number = 0;
+	yOnXRatio: number = 0;
+	yLenght: number = 0;
+	radiusScaleFactor: number = 0;	
+	address: String;
 }
 

@@ -12,7 +12,6 @@ import { Reservation } from './reservation';
 export class DesksServiceService {
 
   private baseUrl = 'http://localhost:8080/api/desks';
-  private baseOfficeUrl = 'http://localhost:8080/api/offices';
   private desksUrl = this.baseUrl;
   private getReservableDeskForDaysUrl =  this.baseUrl + '/getReservableDeskForDays';
   private bookDesksUrl =  this.baseUrl + '/book';
@@ -33,7 +32,4 @@ export class DesksServiceService {
     return this.http.post(`${this.bookDesksUrl}`, reservation);
   }
 
-  getOfficeById(officeId: String): Observable<Office>{
-    return this.http.get<Office>(`${this.baseOfficeUrl}/${officeId}`);
-  }
 }

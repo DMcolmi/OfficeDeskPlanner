@@ -21,22 +21,20 @@ export class CanvasPageComponent implements OnInit {
   @ViewChild('canvasCard', { static: true })
   canvasCard: ElementRef
 
-  image = new Image();
+  plan = new Image();
   ctx: CanvasRenderingContext2D;
-  private winH: number;
-  private winW: number;
-  private imgW: number;
+  private canvasFrameHeight: number;
+  private canvasFrameWidth: number;
+  private planWidth = 0;
   deskListRelativePosition = new Array<CanvasDesk>();
   bookableDesks = new Array<CanvasDesk>();
   modelDatePicker = new Array<Date>();
-  model: any;
   selectedDesk: CanvasDesk | null;
   office: Office = new Office();
 
   //pan and zoom stuff
   canvas: HTMLCanvasElement;
   cameraOffset: { x: number, y: number };
-  previousCameraOffset: { x: number, y: number };
   isDragging = false;
   dragStart: { x: number, y: number } = { x: 0, y: 0 };
   cameraZoom = 1;
@@ -52,19 +50,17 @@ export class CanvasPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.initOffice();
-    this.image.src = "../../assets/images/piantaMilano.svg";
-    this.imgW = 2000;
-    this.winH = 550;
+    this.plan.src = "../../assets/images/piantaMilano.svg";
+    this.planWidth = 2000;
+    this.canvasFrameHeight = 550;
     this.canvas = this.canvasRef.nativeElement;
     var cardBound = this.canvasCard.nativeElement.getBoundingClientRect();
-    this.winW = (cardBound.right - cardBound.left) * .96;
-    this.canvas.height = this.winH;
-    this.canvas.width = this.winW;
+    this.canvasFrameWidth = (cardBound.right - cardBound.left) * .96;
+    this.canvas.height = this.canvasFrameHeight;
+    this.canvas.width = this.canvasFrameWidth;
 
     //pan and zoom stuff
-    this.cameraOffset = { x: this.winW / 2, y: this.winH / 2 };
-    this.previousCameraOffset = { x: 0, y: 0 };
+    this.cameraOffset = { x: this.canvasFrameWidth / 2, y: this.canvasFrameHeight / 2 };
     this.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onPonterDown(e));
     this.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onPointerUp(e));
     this.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onPointerMove(e));
@@ -86,8 +82,8 @@ export class CanvasPageComponent implements OnInit {
     this.canvasRef.nativeElement.addEventListener('click', (event) => {
       this.clearCanvas();
       const canvasRelavitveBound = this.canvasRef.nativeElement.getBoundingClientRect();
-      const x = ((event.clientX- canvasRelavitveBound.left - this.winW / 2)/this.cameraZoom) + (+this.winW / 2 - this.translationX);
-      const y = ((event.clientY- canvasRelavitveBound.top - this.winH / 2)/this.cameraZoom) + (+this.winH / 2 - this.translationY);
+      const x = ((event.clientX- canvasRelavitveBound.left - this.canvasFrameWidth / 2)/this.cameraZoom) + (+this.canvasFrameWidth / 2 - this.translationX);
+      const y = ((event.clientY- canvasRelavitveBound.top - this.canvasFrameHeight / 2)/this.cameraZoom) + (+this.canvasFrameHeight / 2 - this.translationY);
       
       var isSelected: boolean = false;
 
@@ -104,16 +100,7 @@ export class CanvasPageComponent implements OnInit {
     })
 
     this.draw();
-  }
-
-  private initOffice() {
-    this.desksService.getOfficeById("MI").subscribe(
-      {
-        next: officeDto => { this.office = officeDto; },
-        complete: () => { console.log(this.office); }
-      }
-    );
-  }
+  } 
 
   onSelectedDeskFromDropdown() {
     console.log(this.selectedDesk);
@@ -127,7 +114,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawPlan(){
-    this.ctx.drawImage(this.image, -this.winW / 2 , -this.winH / 2 -400, this.imgW, this.imgW * 0.5);    
+    this.ctx.drawImage(this.plan, -this.canvasFrameWidth / 2 , -this.canvasFrameHeight / 2 -400, this.planWidth, this.planWidth * 0.5);    
   }
 
   private clearCanvas(){
@@ -190,7 +177,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawDesk(deskConf: CanvasDesk) {
-    let desk = new CanvasDesk((this.imgW * deskConf.xpos / 20) - this.winW / 2 , (this.imgW * deskConf.ypos / 20 ) - this.winH / 2 -400, this.imgW * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
+    let desk = new CanvasDesk((this.planWidth * deskConf.xpos / 20) - this.canvasFrameWidth / 2 , (this.planWidth * deskConf.ypos / 20 ) - this.canvasFrameHeight / 2 -400, this.planWidth * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
     desk.draw(this.ctx);
     this.deskListRelativePosition.push(desk);
     return desk;
@@ -230,20 +217,20 @@ export class CanvasPageComponent implements OnInit {
   public draw() {
 
     //reset canvas dimension after last iteration
-    this.canvas.width = this.winW;
-    this.canvas.height = this.winH;
+    this.canvas.width = this.canvasFrameWidth;
+    this.canvas.height = this.canvasFrameHeight;
 
     //translate to the canvas centre before zooming
-    this.ctx.translate(this.winW / 2, this.winH / 2);
+    this.ctx.translate(this.canvasFrameWidth / 2, this.canvasFrameHeight / 2);
     //zooming
     this.ctx.scale(this.cameraZoom, this.cameraZoom);
     //translate
-    this.ctx.translate(-this.winW / 2 + this.cameraOffset.x, -this.winH / 2 + this.cameraOffset.y);
+    this.ctx.translate(-this.canvasFrameWidth / 2 + this.cameraOffset.x, -this.canvasFrameHeight / 2 + this.cameraOffset.y);
 
     this.translationX =+ this.cameraOffset.x;
     this.translationY =+ this.cameraOffset.y;
 
-    this.ctx.clearRect(0, 0, this.winW, this.winH);
+    this.ctx.clearRect(0, 0, this.canvasFrameWidth, this.canvasFrameHeight);
 
     //parte che disegna    
     this.redrowPanAndDesk();
