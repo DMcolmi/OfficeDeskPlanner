@@ -21,6 +21,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -30,10 +32,11 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     CanvasPageComponent,
     PickOfficeComponent,
     CanvasPanTestComponent,
+    LandingPageComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    RouterModule,
     BrowserAnimationsModule,
     HttpClientModule,
     MatNativeDateModule,
@@ -49,6 +52,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatDividerModule,
     MatDialogModule,
     MatSnackBarModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

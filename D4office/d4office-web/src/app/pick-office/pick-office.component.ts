@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Office } from '../office';
 import { OfficeService } from '../office.service';
 
@@ -9,7 +9,9 @@ import { OfficeService } from '../office.service';
 })
 export class PickOfficeComponent implements OnInit {
 
-  @Input() selectedOffice: Office;
+  @Input() selected: Office;
+
+  @Output() selectedChange = new EventEmitter<Office>();
 
   constructor(private officeService: OfficeService) { }
   
@@ -20,12 +22,12 @@ export class PickOfficeComponent implements OnInit {
     this.officeService.getOffices().subscribe(
       {
         next: officesCof => {this.offices = officesCof},
-        complete: () => {console.log(this.offices);
-        }
+        complete: () => {}
       }
     )
-
-
   }
 
+  onSelectedOffice(){
+    this.selectedChange.emit(this.selected)
+  }
 }

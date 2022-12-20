@@ -6,6 +6,7 @@ import { DesksServiceService } from '../desks-service.service';
 import { Reservation } from '../reservation';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { Office } from '../office';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -45,11 +46,16 @@ export class CanvasPageComponent implements OnInit {
   translationY = 0;
 
 
-  constructor(private desksService: DesksServiceService, public snackBar: MatSnackBar
+  constructor(
+    private desksService: DesksServiceService,
+     private snackBar: MatSnackBar,
+     private route: ActivatedRoute
     ) { }
 
   ngOnInit(): void {
-
+    console.log("office in:");
+    
+    console.log(this.route.snapshot.paramMap.get("selectedOffice"));
     this.plan.src = "../../assets/images/piantaMilano.svg";
     this.planWidth = 2000;
     this.canvasFrameHeight = 550;

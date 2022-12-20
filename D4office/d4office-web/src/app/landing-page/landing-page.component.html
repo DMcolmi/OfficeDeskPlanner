@@ -1,0 +1,6 @@
+<div (click)="onOfficePicked()">
+    <div class="card-deck" style="margin: 2%;">
+        <app-pick-office *ngFor="let office of offices" [selected]=office (click)="selectedOffice = office; onOfficePicked()"
+            ></app-pick-office>
+    </div>
+</div>z 

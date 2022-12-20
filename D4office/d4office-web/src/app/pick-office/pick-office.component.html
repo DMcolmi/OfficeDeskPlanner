@@ -1,13 +1,9 @@
-<div class="card-deck" style="margin: 2%;">
-    <div *ngFor="let office of offices" >
-        <div class="card" style="margin: 2%;" routerLink="/desks"  style="max-width: 28rem; filter:grayscale(100%)"
-            onmouseover="this.style.filter = 'grayscale(0%)'; this.style.cursor ='pointer'"
-            onmouseout="this.style.filter = 'grayscale(100%)'; this.style.cursor ='default'">
-            <img src="../../assets/images/{{office.officeDesc}}.png" class="card-img-top" />
-            <div class="card-body">
-                <h3 class="card-title">{{office.officeDesc}}</h3>
-                <p class="card-text">{{office.address}}</p>
-            </div>
-        </div>
+<div class="card" style="margin: 2%;" style="max-width: 28rem; filter:grayscale(100%)"
+    onmouseover="this.style.filter = 'grayscale(0%)'; this.style.cursor ='pointer'"
+    onmouseout="this.style.filter = 'grayscale(100%)'; this.style.cursor ='default'">
+    <img src="../../assets/images/{{selected.officeDesc}}.png" class="card-img-top" />
+    <div class="card-body">
+        <h3 class="card-title">{{selected.officeDesc}}</h3>
+        <p class="card-text">{{selected.address}}</p>
     </div>
 </div>
