@@ -6,8 +6,8 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { PickOfficeComponent } from './pick-office/pick-office.component';
 
 const routes: Routes = [
-  { path: '', component: LandingPageComponent},
-  { path: 'desks/:selectedOffice', component: CanvasPageComponent},
+  { path: '', component: LandingPageComponent, pathMatch: 'full'},
+  { path: 'desks/:officeId', component: CanvasPageComponent},
   { path: 'pan', component: CanvasPanTestComponent},
 ];
 

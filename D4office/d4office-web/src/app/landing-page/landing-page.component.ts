@@ -28,7 +28,6 @@ export class LandingPageComponent implements OnInit {
   }
 
   onOfficePicked(){
-      console.log(this.selectedOffice);
-      this.route.navigate(["/desks", this.selectedOffice.address]);
+    this.route.navigate(["/desks", this.selectedOffice.officeId]);
   }
 }

@@ -1,12 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MultipleDatesComponent } from 'ngx-multiple-dates';
 import { CanvasDesk } from '../canvasDesk';
 import { DesksServiceService } from '../desks-service.service';
 import { Reservation } from '../reservation';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Office } from '../office';
 import { ActivatedRoute } from '@angular/router';
+import { OfficeService } from '../office.service';
 
 
 @Component({
@@ -31,7 +32,8 @@ export class CanvasPageComponent implements OnInit {
   bookableDesks = new Array<CanvasDesk>();
   modelDatePicker = new Array<Date>();
   selectedDesk: CanvasDesk | null;
-  office: Office = new Office();
+  office: Office;
+  officeId: string = "";
 
   //pan and zoom stuff
   canvas: HTMLCanvasElement;
@@ -48,16 +50,32 @@ export class CanvasPageComponent implements OnInit {
 
   constructor(
     private desksService: DesksServiceService,
-     private snackBar: MatSnackBar,
-     private route: ActivatedRoute
-    ) { }
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private officeService: OfficeService
+  ) { }
 
   ngOnInit(): void {
-    console.log("office in:");
-    
-    console.log(this.route.snapshot.paramMap.get("selectedOffice"));
+    console.log();
+    this.officeId = this.route.snapshot.paramMap.get("officeId")!
+
+    this.officeService.getOfficeById(this.officeId).subscribe(
+      {
+        next: officeCof => {
+          this.office = officeCof;
+          this.planWidth = officeCof.ylenght;
+        },
+        complete: () => {
+          this.setupCanvas();
+        },
+        error: (e) => { console.log(e); }
+      }
+    )
+  }
+
+  private setupCanvas() {
     this.plan.src = "../../assets/images/piantaMilano.svg";
-    this.planWidth = 2000;
+
     this.canvasFrameHeight = 550;
     this.canvas = this.canvasRef.nativeElement;
     var cardBound = this.canvasCard.nativeElement.getBoundingClientRect();
@@ -76,37 +94,37 @@ export class CanvasPageComponent implements OnInit {
     });
 
 
-    this.ctx = this.canvas!.getContext("2d")!;    
+    this.ctx = this.canvas!.getContext("2d")!;
     this.ctx.globalAlpha = 0.7;
 
     this.drawDesksAndPlan();
 
     window.addEventListener("resize", () => {
       window.location.reload();
-    })  
+    });
 
     this.canvasRef.nativeElement.addEventListener('click', (event) => {
       this.clearCanvas();
       const canvasRelavitveBound = this.canvasRef.nativeElement.getBoundingClientRect();
-      const x = ((event.clientX- canvasRelavitveBound.left - this.canvasFrameWidth / 2)/this.cameraZoom) + (+this.canvasFrameWidth / 2 - this.translationX);
-      const y = ((event.clientY- canvasRelavitveBound.top - this.canvasFrameHeight / 2)/this.cameraZoom) + (+this.canvasFrameHeight / 2 - this.translationY);
-      
+      const x = ((event.clientX - canvasRelavitveBound.left - this.canvasFrameWidth / 2) / this.cameraZoom) + (+this.canvasFrameWidth / 2 - this.translationX);
+      const y = ((event.clientY - canvasRelavitveBound.top - this.canvasFrameHeight / 2) / this.cameraZoom) + (+this.canvasFrameHeight / 2 - this.translationY);
+
       var isSelected: boolean = false;
 
-      this.deskListRelativePosition.forEach(desk => {        
+      this.deskListRelativePosition.forEach(desk => {
         if (desk.click(x, y)) {
           isSelected = true;
-          this.selectedDesk = desk;          
+          this.selectedDesk = desk;
         }
       });
-      if(!isSelected && this.selectedDesk != null){
+      if (!isSelected && this.selectedDesk != null) {
         this.selectedDesk!.click(this.selectedDesk!.xpos, this.selectedDesk!.ypos);
       }
-       this.drawPlan();
-    })
+      this.drawPlan();
+    });
 
     this.draw();
-  } 
+  }
 
   onSelectedDeskFromDropdown() {
     console.log(this.selectedDesk);
@@ -119,17 +137,17 @@ export class CanvasPageComponent implements OnInit {
     this.drawPlan();
   }
 
-  private drawPlan(){
-    this.ctx.drawImage(this.plan, -this.canvasFrameWidth / 2 , -this.canvasFrameHeight / 2 -400, this.planWidth, this.planWidth * 0.5);    
+  private drawPlan() {  
+    this.ctx.drawImage(this.plan, -this.canvasFrameWidth / 2, -this.canvasFrameHeight / 2 - 400, this.planWidth, this.planWidth * this.office.yonXRatio);
   }
 
-  private clearCanvas(){
+  private clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
     this.ctx.globalAlpha = 0.7;
   }
 
   drawDesksAndPlan() {
-    if (this.modelDatePicker.length > 0){
+    if (this.modelDatePicker.length > 0) {
       this.drawReservableDeskForSelectedDays();
     } else {
       this.drawDeskConfiguration();
@@ -159,7 +177,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawDeskConfiguration() {
-    this.desksService.getDesksConf('MI').subscribe({
+    this.desksService.getDesksConf(this.office.officeId).subscribe({
       next: (desksConf) => {
 
         this.clearCanvas();
@@ -183,7 +201,7 @@ export class CanvasPageComponent implements OnInit {
   }
 
   private drawDesk(deskConf: CanvasDesk) {
-    let desk = new CanvasDesk((this.planWidth * deskConf.xpos / 20) - this.canvasFrameWidth / 2 , (this.planWidth * deskConf.ypos / 20 ) - this.canvasFrameHeight / 2 -400, this.planWidth * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
+    let desk = new CanvasDesk((this.planWidth * deskConf.xpos / 20) - this.canvasFrameWidth / 2, (this.planWidth * deskConf.ypos / 20) - this.canvasFrameHeight / 2 - 400, this.planWidth * .004, deskConf.deskNo, deskConf.canBeReserved, deskConf.isReserved, deskConf.officeId);
     desk.draw(this.ctx);
     this.deskListRelativePosition.push(desk);
     return desk;
@@ -198,13 +216,13 @@ export class CanvasPageComponent implements OnInit {
       next: (result) => { console.log(result) },
       error: (e) => console.log('error: ', e),
       complete: () => {
-        
-        let snackBarRef = this.snackBar.open( 'Thanks! Your reservation is confirmed',"Ok", {duration: 2000});
+
+        let snackBarRef = this.snackBar.open('Thanks! Your reservation is confirmed', "Ok", { duration: 2000 });
         this.modelDatePicker = new Array<Date>();
         this.selectedDesk = null;
         this.drawDesksAndPlan()
       }
-    })    
+    })
   }
 
   redrowPanAndDesk() {
@@ -233,8 +251,8 @@ export class CanvasPageComponent implements OnInit {
     //translate
     this.ctx.translate(-this.canvasFrameWidth / 2 + this.cameraOffset.x, -this.canvasFrameHeight / 2 + this.cameraOffset.y);
 
-    this.translationX =+ this.cameraOffset.x;
-    this.translationY =+ this.cameraOffset.y;
+    this.translationX = + this.cameraOffset.x;
+    this.translationY = + this.cameraOffset.y;
 
     this.ctx.clearRect(0, 0, this.canvasFrameWidth, this.canvasFrameHeight);
 
@@ -250,8 +268,8 @@ export class CanvasPageComponent implements OnInit {
 
   onPonterDown(e: MouseEvent) {
     this.isDragging = true;
-    this.dragStart.x = getEventLocation(e, this.canvas).x/this.cameraZoom - this.cameraOffset.x;
-    this.dragStart.y = getEventLocation(e, this.canvas).y/this.cameraZoom - this.cameraOffset.y;
+    this.dragStart.x = getEventLocation(e, this.canvas).x / this.cameraZoom - this.cameraOffset.x;
+    this.dragStart.y = getEventLocation(e, this.canvas).y / this.cameraZoom - this.cameraOffset.y;
   }
 
   onPointerUp(e: MouseEvent) {
@@ -262,8 +280,8 @@ export class CanvasPageComponent implements OnInit {
   onPointerMove(e: MouseEvent) {
     if (this.isDragging) {
       this.canvas.style.cursor = 'move';
-      this.cameraOffset.x = (getEventLocation(e, this.canvas).x/this.cameraZoom - (this.dragStart.x));
-      this.cameraOffset.y = (getEventLocation(e, this.canvas).y/this.cameraZoom - (this.dragStart.y));
+      this.cameraOffset.x = (getEventLocation(e, this.canvas).x / this.cameraZoom - (this.dragStart.x));
+      this.cameraOffset.y = (getEventLocation(e, this.canvas).y / this.cameraZoom - (this.dragStart.y));
     }
   }
 
