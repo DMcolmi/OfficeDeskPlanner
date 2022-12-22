@@ -23,6 +23,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RouterModule } from '@angular/router';
+import { LoginComponent } from './login/login.component';
 
 
 
@@ -33,6 +34,7 @@ import { RouterModule } from '@angular/router';
     PickOfficeComponent,
     CanvasPanTestComponent,
     LandingPageComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
