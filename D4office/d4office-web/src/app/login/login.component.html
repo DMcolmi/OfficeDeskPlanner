@@ -1,19 +1,19 @@
-<div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center" style="margin: 5%; display:inline-block;">
-    <mat-card class="box" style="margin: 0; width: 28rem;">
-        <mat-card-header>
-            <mat-card-title >Login</mat-card-title>
-        </mat-card-header>
+<div class="align-self-center" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card style="margin: 0 auto; float: none; width: 300px; margin-top: 300px; ">
+            <div style="text-align: center;" >
+                <mat-card-title >Login</mat-card-title>
+            </div>
         <form>
-            <mat-card-content>
-                <mat-form-field>
+            <mat-card-content>                
+                <mat-form-field style="display: block;">
                     <input matInput placeholder="Username/Email">
                 </mat-form-field>
                 <br>
-                <mat-form-field>
+                <mat-form-field style="display: block;">
                     <input matInput placeholder="Password" type="password">
                 </mat-form-field>
             </mat-card-content>
-            <button mat-stroked-button color="accent" class="btn-block" routerLink="/offices">Login</button>
+            <a mat-raised-button routerLink="offices" class="btn-block">Login</a>
         </form>
     </mat-card>
 </div>

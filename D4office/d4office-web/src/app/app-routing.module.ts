@@ -7,7 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { PickOfficeComponent } from './pick-office/pick-office.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent, pathMatch: 'full'},
+  { path: '', component: LoginComponent},
   { path: 'offices', component: LandingPageComponent},
   { path: 'desks/:officeId', component: CanvasPageComponent},
   { path: 'pan', component: CanvasPanTestComponent},
